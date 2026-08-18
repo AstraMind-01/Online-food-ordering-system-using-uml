@@ -1,0 +1,232 @@
+<mxfile host="app.diagrams.net" version="24.7.5" type="device">
+  <diagram id="diag_class" name="ONLINE FOOD ORDERING SYSTEM — DOMAIN MODEL (CONCEPTUAL CLASS DIAGRAM)">
+    <mxGraphModel dx="2000" dy="1400" grid="1" gridSize="10" page="1" pageScale="1" pageWidth="2600" pageHeight="1800">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="title" value="ONLINE FOOD ORDERING SYSTEM — DOMAIN MODEL (CONCEPTUAL CLASS DIAGRAM)" style="shape=mxgraph.bootstrap.rrect;rSize=6;fillColor=#1A237E;strokeColor=#1A237E;strokeWidth=2;fontStyle=1;fontSize=18;fontColor=#FFFFFF;align=center;verticalAlign=middle;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="20" width="1800" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="class_user" value="&lt;div style=&quot;text-align:center;padding:4px 0px;border-bottom:1.5px solid #1565C0;background-color:rgba(0,0,0,0.04);margin:-6px -8px 6px -8px;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;Abstract&amp;gt;&amp;gt;&lt;br/&gt;User&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:11px;line-height:1.4;padding-bottom:4px;&quot;&gt;userId: String&lt;br/&gt;name: String&lt;br/&gt;email: String&lt;br/&gt;password: String&lt;br/&gt;phone: String&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;overflow=hidden;fillColor=#E3F2FD;strokeColor=#1565C0;strokeWidth=2;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="90" width="260" height="140" as="geometry"/>
+        </mxCell>
+        <mxCell id="class_customer" value="&lt;div style=&quot;text-align:center;padding:4px 0px;border-bottom:1.5px solid #0288D1;background-color:rgba(0,0,0,0.04);margin:-6px -8px 6px -8px;&quot;&gt;&lt;b&gt;Customer&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:11px;line-height:1.4;padding-bottom:4px;&quot;&gt;address: String&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;overflow=hidden;fillColor=#E1F5FE;strokeColor=#0288D1;strokeWidth=2;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="560" y="280" width="260" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="class_restaurantstaff" value="&lt;div style=&quot;text-align:center;padding:4px 0px;border-bottom:1.5px solid #7B1FA2;background-color:rgba(0,0,0,0.04);margin:-6px -8px 6px -8px;&quot;&gt;&lt;b&gt;RestaurantStaff&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:11px;line-height:1.4;padding-bottom:4px;&quot;&gt;staffId: String&lt;br/&gt;restaurantId: String&lt;br/&gt;role: String&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;overflow=hidden;fillColor=#F3E5F5;strokeColor=#7B1FA2;strokeWidth=2;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="280" width="260" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="class_deliverypartner" value="&lt;div style=&quot;text-align:center;padding:4px 0px;border-bottom:1.5px solid #FFA000;background-color:rgba(0,0,0,0.04);margin:-6px -8px 6px -8px;&quot;&gt;&lt;b&gt;DeliveryPartner&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:11px;line-height:1.4;padding-bottom:4px;&quot;&gt;partnerId: String&lt;br/&gt;vehicleNumber: String&lt;br/&gt;currentLocation: String&lt;br/&gt;isAvailable: boolean&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;overflow=hidden;fillColor=#FFF8E1;strokeColor=#FFA000;strokeWidth=2;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1520" y="280" width="260" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="class_cart" value="&lt;div style=&quot;text-align:center;padding:4px 0px;border-bottom:1.5px solid #0288D1;background-color:rgba(0,0,0,0.04);margin:-6px -8px 6px -8px;&quot;&gt;&lt;b&gt;Cart&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:11px;line-height:1.4;padding-bottom:4px;&quot;&gt;cartId: String&lt;br/&gt;totalAmount: double&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;overflow=hidden;fillColor=#E1F5FE;strokeColor=#0288D1;strokeWidth=2;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="280" width="240" height="85" as="geometry"/>
+        </mxCell>
+        <mxCell id="class_order" value="&lt;div style=&quot;text-align:center;padding:4px 0px;border-bottom:1.5px solid #2E7D32;background-color:rgba(0,0,0,0.04);margin:-6px -8px 6px -8px;&quot;&gt;&lt;b&gt;Order&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:11px;line-height:1.4;padding-bottom:4px;&quot;&gt;orderId: String&lt;br/&gt;orderDate: Date&lt;br/&gt;totalAmount: double&lt;br/&gt;status: String&lt;br/&gt;deliveryAddress: String&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;overflow=hidden;fillColor=#E8F5E9;strokeColor=#2E7D32;strokeWidth=2;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="560" y="470" width="260" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="class_restaurant" value="&lt;div style=&quot;text-align:center;padding:4px 0px;border-bottom:1.5px solid #7B1FA2;background-color:rgba(0,0,0,0.04);margin:-6px -8px 6px -8px;&quot;&gt;&lt;b&gt;Restaurant&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:11px;line-height:1.4;padding-bottom:4px;&quot;&gt;restaurantId: String&lt;br/&gt;name: String&lt;br/&gt;location: String&lt;br/&gt;contactNumber: String&lt;br/&gt;isOpen: boolean&lt;br/&gt;rating: double&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;overflow=hidden;fillColor=#F3E5F5;strokeColor=#7B1FA2;strokeWidth=2;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="470" width="260" height="140" as="geometry"/>
+        </mxCell>
+        <mxCell id="class_delivery" value="&lt;div style=&quot;text-align:center;padding:4px 0px;border-bottom:1.5px solid #FFA000;background-color:rgba(0,0,0,0.04);margin:-6px -8px 6px -8px;&quot;&gt;&lt;b&gt;Delivery&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:11px;line-height:1.4;padding-bottom:4px;&quot;&gt;deliveryId: String&lt;br/&gt;deliveryStatus: String&lt;br/&gt;deliveryAddress: String&lt;br/&gt;pickupTime: Date&lt;br/&gt;deliveryTime: Date&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;overflow=hidden;fillColor=#FFF8E1;strokeColor=#FFA000;strokeWidth=2;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1520" y="470" width="260" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="class_payment" value="&lt;div style=&quot;text-align:center;padding:4px 0px;border-bottom:1.5px solid #E65100;background-color:rgba(0,0,0,0.04);margin:-6px -8px 6px -8px;&quot;&gt;&lt;b&gt;Payment&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:11px;line-height:1.4;padding-bottom:4px;&quot;&gt;paymentId: String&lt;br/&gt;amount: double&lt;br/&gt;paymentMethod: String&lt;br/&gt;paymentStatus: String&lt;br/&gt;transactionDate: Date&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;overflow=hidden;fillColor=#FFF3E0;strokeColor=#E65100;strokeWidth=2;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="470" width="240" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="class_cartitem" value="&lt;div style=&quot;text-align:center;padding:4px 0px;border-bottom:1.5px solid #0288D1;background-color:rgba(0,0,0,0.04);margin:-6px -8px 6px -8px;&quot;&gt;&lt;b&gt;CartItem&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:11px;line-height:1.4;padding-bottom:4px;&quot;&gt;cartItemId: String&lt;br/&gt;quantity: int&lt;br/&gt;unitPrice: double&lt;br/&gt;subTotal: double&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;overflow=hidden;fillColor=#E1F5FE;strokeColor=#0288D1;strokeWidth=2;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="710" width="240" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="class_orderitem" value="&lt;div style=&quot;text-align:center;padding:4px 0px;border-bottom:1.5px solid #2E7D32;background-color:rgba(0,0,0,0.04);margin:-6px -8px 6px -8px;&quot;&gt;&lt;b&gt;OrderItem&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:11px;line-height:1.4;padding-bottom:4px;&quot;&gt;orderItemId: String&lt;br/&gt;quantity: int&lt;br/&gt;price: double&lt;br/&gt;subTotal: double&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;overflow=hidden;fillColor=#E8F5E9;strokeColor=#2E7D32;strokeWidth=2;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="560" y="710" width="260" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="class_fooditem" value="&lt;div style=&quot;text-align:center;padding:4px 0px;border-bottom:1.5px solid #00796B;background-color:rgba(0,0,0,0.04);margin:-6px -8px 6px -8px;&quot;&gt;&lt;b&gt;FoodItem&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:11px;line-height:1.4;padding-bottom:4px;&quot;&gt;foodId: String&lt;br/&gt;name: String&lt;br/&gt;price: double&lt;br/&gt;description: String&lt;br/&gt;availability: boolean&lt;br/&gt;cuisine: String&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;overflow=hidden;fillColor=#E0F2F1;strokeColor=#00796B;strokeWidth=2;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="710" width="260" height="140" as="geometry"/>
+        </mxCell>
+        <mxCell id="class_category" value="&lt;div style=&quot;text-align:center;padding:4px 0px;border-bottom:1.5px solid #00796B;background-color:rgba(0,0,0,0.04);margin:-6px -8px 6px -8px;&quot;&gt;&lt;b&gt;Category&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:11px;line-height:1.4;padding-bottom:4px;&quot;&gt;categoryId: String&lt;br/&gt;name: String&lt;br/&gt;description: String&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;overflow=hidden;fillColor=#E0F2F1;strokeColor=#00796B;strokeWidth=2;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1520" y="710" width="260" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="class_review" value="&lt;div style=&quot;text-align:center;padding:4px 0px;border-bottom:1.5px solid #C2185B;background-color:rgba(0,0,0,0.04);margin:-6px -8px 6px -8px;&quot;&gt;&lt;b&gt;Review&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:11px;line-height:1.4;padding-bottom:4px;&quot;&gt;reviewId: String&lt;br/&gt;rating: int&lt;br/&gt;comment: String&lt;br/&gt;reviewDate: Date&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;overflow=hidden;fillColor=#FCE4EC;strokeColor=#C2185B;strokeWidth=2;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="560" y="950" width="260" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="gen_cust" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=0;endSize=12;strokeColor=#1565C0;strokeWidth=2;" edge="1" parent="1" source="class_customer" target="class_user">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="705" y="240"/>
+              <mxPoint x="1175" y="240"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gen_staff" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=0;endSize=12;strokeColor=#1565C0;strokeWidth=2;" edge="1" parent="1" source="class_restaurantstaff" target="class_user">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="gen_partner" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=0;endSize=12;strokeColor=#1565C0;strokeWidth=2;" edge="1" parent="1" source="class_deliverypartner" target="class_user">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1660" y="240"/>
+              <mxPoint x="1175" y="240"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rel_cust_cart" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#0288D1;strokeWidth=1.8;endArrow=none;" edge="1" parent="1" source="class_customer" target="class_cart">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_cust_cart_src" value="1" style="edgeLabel;html=1;align=left;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;fontSize=11;fontColor=#263238;" vertex="1" connectable="0" parent="rel_cust_cart">
+          <mxGeometry x="-0.8" y="10" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_cust_cart_tgt" value="1" style="edgeLabel;html=1;align=right;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;fontSize=11;fontColor=#263238;" vertex="1" connectable="0" parent="rel_cust_cart">
+          <mxGeometry x="0.8" y="10" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_cart_item" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#0288D1;strokeWidth=1.8;startArrow=diamond;startFill=1;startSize=14;endArrow=none;" edge="1" parent="1" source="class_cart" target="class_cartitem">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_cart_item_src" value="1" style="edgeLabel;html=1;align=left;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;fontSize=11;fontColor=#263238;" vertex="1" connectable="0" parent="rel_cart_item">
+          <mxGeometry x="-0.8" y="10" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_cart_item_tgt" value="*" style="edgeLabel;html=1;align=right;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;fontSize=11;fontColor=#263238;" vertex="1" connectable="0" parent="rel_cart_item">
+          <mxGeometry x="0.8" y="10" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_cartitem_food" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#00796B;strokeWidth=1.8;endArrow=none;" edge="1" parent="1" source="class_cartitem" target="class_fooditem">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="235" y="1020"/>
+              <mxPoint x="1175" y="1020"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rel_cartitem_food_src" value="*" style="edgeLabel;html=1;align=left;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;fontSize=11;fontColor=#263238;" vertex="1" connectable="0" parent="rel_cartitem_food">
+          <mxGeometry x="-0.8" y="10" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_cartitem_food_tgt" value="1" style="edgeLabel;html=1;align=right;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;fontSize=11;fontColor=#263238;" vertex="1" connectable="0" parent="rel_cartitem_food">
+          <mxGeometry x="0.8" y="10" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_cust_order" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#2E7D32;strokeWidth=1.8;endArrow=none;" edge="1" parent="1" source="class_customer" target="class_order">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_cust_order_src" value="1" style="edgeLabel;html=1;align=left;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;fontSize=11;fontColor=#263238;" vertex="1" connectable="0" parent="rel_cust_order">
+          <mxGeometry x="-0.8" y="10" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_cust_order_tgt" value="*" style="edgeLabel;html=1;align=right;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;fontSize=11;fontColor=#263238;" vertex="1" connectable="0" parent="rel_cust_order">
+          <mxGeometry x="0.8" y="10" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_order_item" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#2E7D32;strokeWidth=1.8;startArrow=diamond;startFill=1;startSize=14;endArrow=none;" edge="1" parent="1" source="class_order" target="class_orderitem">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_order_item_src" value="1" style="edgeLabel;html=1;align=left;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;fontSize=11;fontColor=#263238;" vertex="1" connectable="0" parent="rel_order_item">
+          <mxGeometry x="-0.8" y="10" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_order_item_tgt" value="1..*" style="edgeLabel;html=1;align=right;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;fontSize=11;fontColor=#263238;" vertex="1" connectable="0" parent="rel_order_item">
+          <mxGeometry x="0.8" y="10" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_orderitem_food" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#00796B;strokeWidth=1.8;endArrow=none;" edge="1" parent="1" source="class_orderitem" target="class_fooditem">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_orderitem_food_src" value="*" style="edgeLabel;html=1;align=left;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;fontSize=11;fontColor=#263238;" vertex="1" connectable="0" parent="rel_orderitem_food">
+          <mxGeometry x="-0.8" y="10" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_orderitem_food_tgt" value="1" style="edgeLabel;html=1;align=right;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;fontSize=11;fontColor=#263238;" vertex="1" connectable="0" parent="rel_orderitem_food">
+          <mxGeometry x="0.8" y="10" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_order_payment" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#E65100;strokeWidth=1.8;endArrow=none;" edge="1" parent="1" source="class_order" target="class_payment">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_order_payment_src" value="1" style="edgeLabel;html=1;align=left;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;fontSize=11;fontColor=#263238;" vertex="1" connectable="0" parent="rel_order_payment">
+          <mxGeometry x="-0.8" y="10" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_order_payment_tgt" value="1" style="edgeLabel;html=1;align=right;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;fontSize=11;fontColor=#263238;" vertex="1" connectable="0" parent="rel_order_payment">
+          <mxGeometry x="0.8" y="10" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_rest_staff" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#7B1FA2;strokeWidth=1.8;endArrow=none;" edge="1" parent="1" source="class_restaurant" target="class_restaurantstaff">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_rest_staff_src" value="1" style="edgeLabel;html=1;align=left;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;fontSize=11;fontColor=#263238;" vertex="1" connectable="0" parent="rel_rest_staff">
+          <mxGeometry x="-0.8" y="10" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_rest_staff_tgt" value="*" style="edgeLabel;html=1;align=right;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;fontSize=11;fontColor=#263238;" vertex="1" connectable="0" parent="rel_rest_staff">
+          <mxGeometry x="0.8" y="10" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_rest_order" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#7B1FA2;strokeWidth=1.8;endArrow=none;" edge="1" parent="1" source="class_restaurant" target="class_order">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_rest_order_src" value="1" style="edgeLabel;html=1;align=left;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;fontSize=11;fontColor=#263238;" vertex="1" connectable="0" parent="rel_rest_order">
+          <mxGeometry x="-0.8" y="10" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_rest_order_tgt" value="*" style="edgeLabel;html=1;align=right;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;fontSize=11;fontColor=#263238;" vertex="1" connectable="0" parent="rel_rest_order">
+          <mxGeometry x="0.8" y="10" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_rest_food" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#7B1FA2;strokeWidth=1.8;endArrow=none;" edge="1" parent="1" source="class_restaurant" target="class_fooditem">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_rest_food_src" value="1" style="edgeLabel;html=1;align=left;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;fontSize=11;fontColor=#263238;" vertex="1" connectable="0" parent="rel_rest_food">
+          <mxGeometry x="-0.8" y="10" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_rest_food_tgt" value="*" style="edgeLabel;html=1;align=right;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;fontSize=11;fontColor=#263238;" vertex="1" connectable="0" parent="rel_rest_food">
+          <mxGeometry x="0.8" y="10" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_food_cat" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#00796B;strokeWidth=1.8;endArrow=none;" edge="1" parent="1" source="class_fooditem" target="class_category">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_food_cat_src" value="*" style="edgeLabel;html=1;align=left;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;fontSize=11;fontColor=#263238;" vertex="1" connectable="0" parent="rel_food_cat">
+          <mxGeometry x="-0.8" y="10" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_food_cat_tgt" value="1" style="edgeLabel;html=1;align=right;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;fontSize=11;fontColor=#263238;" vertex="1" connectable="0" parent="rel_food_cat">
+          <mxGeometry x="0.8" y="10" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_order_del" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#FFA000;strokeWidth=1.8;endArrow=none;" edge="1" parent="1" source="class_order" target="class_delivery">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="850" y="620"/>
+              <mxPoint x="1520" y="620"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rel_order_del_src" value="1" style="edgeLabel;html=1;align=left;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;fontSize=11;fontColor=#263238;" vertex="1" connectable="0" parent="rel_order_del">
+          <mxGeometry x="-0.8" y="10" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_order_del_tgt" value="1" style="edgeLabel;html=1;align=right;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;fontSize=11;fontColor=#263238;" vertex="1" connectable="0" parent="rel_order_del">
+          <mxGeometry x="0.8" y="10" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_partner_del" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#FFA000;strokeWidth=1.8;endArrow=none;" edge="1" parent="1" source="class_deliverypartner" target="class_delivery">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_partner_del_src" value="1" style="edgeLabel;html=1;align=left;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;fontSize=11;fontColor=#263238;" vertex="1" connectable="0" parent="rel_partner_del">
+          <mxGeometry x="-0.8" y="10" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_partner_del_tgt" value="*" style="edgeLabel;html=1;align=right;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;fontSize=11;fontColor=#263238;" vertex="1" connectable="0" parent="rel_partner_del">
+          <mxGeometry x="0.8" y="10" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_cust_rev" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#C2185B;strokeWidth=1.8;endArrow=none;" edge="1" parent="1" source="class_customer" target="class_review">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="530" y="420"/>
+              <mxPoint x="530" y="1140"/>
+              <mxPoint x="560" y="1140"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rel_cust_rev_src" value="1" style="edgeLabel;html=1;align=left;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;fontSize=11;fontColor=#263238;" vertex="1" connectable="0" parent="rel_cust_rev">
+          <mxGeometry x="-0.8" y="10" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_cust_rev_tgt" value="*" style="edgeLabel;html=1;align=right;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;fontSize=11;fontColor=#263238;" vertex="1" connectable="0" parent="rel_cust_rev">
+          <mxGeometry x="0.8" y="10" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_food_rev" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#C2185B;strokeWidth=1.8;endArrow=none;" edge="1" parent="1" source="class_fooditem" target="class_review">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1040" y="910"/>
+              <mxPoint x="900" y="910"/>
+              <mxPoint x="900" y="1140"/>
+              <mxPoint x="850" y="1140"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rel_food_rev_src" value="1" style="edgeLabel;html=1;align=left;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;fontSize=11;fontColor=#263238;" vertex="1" connectable="0" parent="rel_food_rev">
+          <mxGeometry x="-0.8" y="10" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_food_rev_tgt" value="*" style="edgeLabel;html=1;align=right;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;fontSize=11;fontColor=#263238;" vertex="1" connectable="0" parent="rel_food_rev">
+          <mxGeometry x="0.8" y="10" relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
