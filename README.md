@@ -14,7 +14,7 @@ All diagrams are built natively as diagrams.net (`.drawio`) XML models and accom
 ## 📁 Repository Structure
 
 ```text
-Online_Food_Ordering_System/
+Online-food-ordering-system-using-uml/
 │
 ├── 01_Requirements/
 │   ├── SRS.md                                  # Full Software Requirements Specification
