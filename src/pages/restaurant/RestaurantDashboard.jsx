@@ -266,7 +266,7 @@ export default function RestaurantDashboard() {
                         {grp.deliveryMode || 'COMMON'}
                       </span>
                       <div className="mt-1 font-headline-md text-sm font-bold text-[#231916]">
-                        ${grp.totalAmount?.toFixed(2) || '0.00'}
+                        ₹{grp.totalAmount?.toFixed(2) || '0.00'}
                       </div>
                     </div>
                   </div>

@@ -644,7 +644,7 @@ export default function TrackOrder() {
                         </span>
                       </div>
                       <span className="font-headline-sm text-headline-sm text-on-surface">
-                        ${((item.price || 0) * (item.quantity || 1)).toFixed(2)}
+                        ₹{((item.price || 0) * (item.quantity || 1)).toFixed(2)}
                       </span>
                     </div>
                     <div className="pl-8 text-body-sm text-on-surface-variant flex justify-between">
@@ -705,7 +705,7 @@ export default function TrackOrder() {
               <div className="mt-2 pt-2 border-t-2 border-on-surface flex justify-between items-baseline">
                 <span className="font-headline-sm text-headline-sm uppercase font-extrabold">Total Paid:</span>
                 <span className="font-headline-xl text-headline-xl text-primary font-black leading-none">
-                  ${(Number(order?.totalAmount || 17.95) * 1.2625 + 2.50).toFixed(2)}
+                  ₹{(Number(order?.totalAmount || 17.95) * 1.2625 + 2.50).toFixed(2)}
                 </span>
               </div>
             </div>

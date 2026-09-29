@@ -241,7 +241,7 @@ export default function RestaurantMenu() {
                         {item.name}
                       </h3>
                       <span className="font-headline-lg text-base font-black text-[#cb4926] flex-shrink-0">
-                        ${typeof item.price === 'number' ? item.price.toFixed(2) : item.price}
+                        ₹{typeof item.price === 'number' ? item.price.toFixed(2) : item.price}
                       </span>
                     </div>
 

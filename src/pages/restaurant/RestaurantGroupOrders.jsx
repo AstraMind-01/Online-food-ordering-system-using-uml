@@ -188,7 +188,7 @@ export default function RestaurantGroupOrders() {
                               </span>
                             </span>
                             <span className="font-mono text-[#59413b]">
-                              ${((ci.price || 0) * ci.quantity).toFixed(2)}
+                              ₹{((ci.price || 0) * ci.quantity).toFixed(2)}
                             </span>
                           </div>
                         ))
@@ -206,7 +206,7 @@ export default function RestaurantGroupOrders() {
                       Booth Total:
                     </span>
                     <span className="font-headline-lg text-xl font-black text-[#cb4926]">
-                      ${grp.totalAmount?.toFixed(2) || '0.00'}
+                      ₹{grp.totalAmount?.toFixed(2) || '0.00'}
                     </span>
                   </div>
 
@@ -272,7 +272,7 @@ export default function RestaurantGroupOrders() {
                   Booth Total
                 </span>
                 <span className="font-headline-md text-base font-black text-[#cb4926]">
-                  ${reviewOrder.totalAmount?.toFixed(2)}
+                  ₹{reviewOrder.totalAmount?.toFixed(2)}
                 </span>
               </div>
             </div>

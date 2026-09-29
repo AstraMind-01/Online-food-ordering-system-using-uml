@@ -399,7 +399,7 @@ export default function DeliveryDashboard() {
 
                 <div className="flex items-center gap-4 text-xs font-bold">
                   <span className="font-extrabold text-[#cb4926]">
-                    ${del.totalAmount?.toFixed(2) || '0.00'}
+                    ₹{del.totalAmount?.toFixed(2) || '0.00'}
                   </span>
                   <span className="text-[#8d716a] font-mono">
                     {del.deliveredAt ? new Date(del.deliveredAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Today'}

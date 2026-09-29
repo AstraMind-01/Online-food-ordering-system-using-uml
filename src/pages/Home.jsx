@@ -291,7 +291,7 @@ export default function Home() {
                 {/* Price and Add to Cart Action */}
                 <div className="pt-3 border-t-2 border-dashed border-[#231916] flex items-center justify-between gap-3">
                   <div className="font-headline-lg text-2xl font-black text-[#cb4926] tracking-tight">
-                    ${typeof item.price === 'number' ? item.price.toFixed(2) : item.price}
+                    ₹{typeof item.price === 'number' ? item.price.toFixed(2) : item.price}
                   </div>
 
                   <button

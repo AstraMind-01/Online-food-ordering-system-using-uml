@@ -206,7 +206,7 @@ export default function DeliveryActive() {
                       Bill Amount:
                     </span>
                     <span className="font-headline-lg text-2xl font-black text-[#cb4926]">
-                      ${delivery.totalAmount?.toFixed(2) || '0.00'}
+                      ₹{delivery.totalAmount?.toFixed(2) || '0.00'}
                     </span>
                   </div>
                 </div>
@@ -374,7 +374,7 @@ export default function DeliveryActive() {
                             {item.quantity}x {item.menuItemName}
                           </span>
                           <span className="font-extrabold text-[#cb4926]">
-                            ${(item.price * item.quantity).toFixed(2)}
+                            ₹{(item.price * item.quantity).toFixed(2)}
                           </span>
                         </div>
                       ))}

@@ -130,7 +130,7 @@ export default function RestaurantPayments() {
                         )}
                       </td>
                       <td className="py-3.5 px-4 border-r-2 border-[#231916] font-headline-md text-sm font-black text-[#cb4926]">
-                        ${p.amount?.toFixed(2)}
+                        ₹{p.amount?.toFixed(2)}
                       </td>
                       <td className="py-3.5 px-4 border-r-2 border-[#231916] font-bold uppercase text-[#59413b]">
                         {p.method || 'CARD'}

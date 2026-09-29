@@ -226,7 +226,7 @@ export default function RestaurantOrders() {
                               {item.foodItemName}
                             </span>
                             <span className="font-mono text-[#59413b]">
-                              ${((item.price || 0) * item.quantity).toFixed(2)}
+                              ₹{((item.price || 0) * item.quantity).toFixed(2)}
                             </span>
                           </div>
                         ))
