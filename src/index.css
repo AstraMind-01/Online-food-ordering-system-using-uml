@@ -1,0 +1,345 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    overscroll-behavior: none;
+  }
+  main > :first-child {
+    margin-top: 0 !important;
+  }
+  main > :last-child {
+    margin-bottom: 0 !important;
+  }
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.retro-halftone {
+  background-color: #fff8f6;
+  background-image: radial-gradient(#59413b 0.75px, transparent 0.75px);
+  background-size: 12px 12px;
+  background-attachment: fixed;
+}
+
+.diner-border {
+  border: 2.5px solid #231916;
+  box-shadow: 3px 3px 0px #231916;
+}
+
+.diner-border-thick {
+  border: 3px solid #231916;
+  box-shadow: 0 3px 0 #231916;
+}
+
+.diner-tag {
+  border: 2px solid #231916;
+  box-shadow: 2px 2px 0px #231916;
+}
+
+.scallop-divider {
+  background: radial-gradient(circle, transparent, transparent 50%, #231916 50%, #231916 100%);
+  background-size: 16px 8px;
+}
+
+/* Very Slow Sunburst Rotation */
+@keyframes sunburstSlowSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-sunburst {
+  animation: sunburstSlowSpin 240s linear infinite;
+  transform-origin: 50% 50%;
+}
+
+/* Funky Carousel Slide Exit & Enter Animations */
+@keyframes slideOutToLeft {
+  0% {
+    transform: translateX(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-125%) rotate(-8deg);
+    opacity: 0;
+  }
+}
+
+@keyframes slideOutToRight {
+  0% {
+    transform: translateX(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(125%) rotate(8deg);
+    opacity: 0;
+  }
+}
+
+@keyframes slideInFromRight {
+  0% {
+    transform: translateX(125%) rotate(6deg) scale(0.92);
+    opacity: 0;
+  }
+  60% {
+    transform: translateX(-12px) rotate(-3deg) scale(1.03);
+    opacity: 1;
+  }
+  80% {
+    transform: translateX(4px) rotate(1deg) scale(0.99);
+  }
+  100% {
+    transform: translateX(0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateX(-125%) rotate(-8deg) scale(0.92);
+    opacity: 0;
+  }
+  60% {
+    transform: translateX(12px) rotate(2deg) scale(1.03);
+    opacity: 1;
+  }
+  80% {
+    transform: translateX(-4px) rotate(-1deg) scale(0.99);
+  }
+  100% {
+    transform: translateX(0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Staggered Element Animations */
+@keyframes dropInBadge {
+  0% {
+    transform: translateY(-24px) scale(0.7);
+    opacity: 0;
+  }
+  70% {
+    transform: translateY(3px) scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes popWiggleSticker {
+  0% {
+    transform: scale(0) rotate(-20deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.25) rotate(18deg);
+    opacity: 1;
+  }
+  70% {
+    transform: scale(0.92) rotate(8deg);
+  }
+  85% {
+    transform: scale(1.06) rotate(14deg);
+  }
+  100% {
+    transform: scale(1) rotate(12deg);
+    opacity: 1;
+  }
+}
+
+@keyframes slideUpPill {
+  0% {
+    transform: translateY(18px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pricePop {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.32);
+    color: #cb4926;
+  }
+  75% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes photoReveal {
+  0% {
+    transform: scale(1.06);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInContent {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.anim-slide-out-left {
+  animation: slideOutToLeft 0.45s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.anim-slide-out-right {
+  animation: slideOutToRight 0.45s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.anim-slide-in-right {
+  animation: slideInFromRight 0.55s cubic-bezier(0.34, 1.45, 0.64, 1) forwards;
+}
+
+.anim-slide-in-left {
+  animation: slideInFromLeft 0.55s cubic-bezier(0.34, 1.45, 0.64, 1) forwards;
+}
+
+.anim-drop-badge {
+  animation: dropInBadge 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) 0.12s both;
+}
+
+.anim-pop-sticker {
+  animation: popWiggleSticker 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;
+}
+
+.anim-slide-pill {
+  animation: slideUpPill 0.35s cubic-bezier(0.34, 1.4, 0.64, 1) 0.28s both;
+}
+
+.anim-photo {
+  animation: photoReveal 0.4s ease-out both;
+}
+
+.anim-content {
+  animation: fadeInContent 0.35s ease-out 0.36s both;
+}
+
+.anim-price-pop {
+  animation: pricePop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 0.55s both;
+}
+
+/* Scrolling Popup Animations */
+@keyframes scrollPopupBounce {
+  0% {
+    transform: translateY(120%) scale(0.7) rotate(-3deg);
+    opacity: 0;
+  }
+  65% {
+    transform: translateY(-8px) scale(1.04) rotate(1deg);
+    opacity: 1;
+  }
+  85% {
+    transform: translateY(3px) scale(0.98) rotate(-0.5deg);
+  }
+  100% {
+    transform: translateY(0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes scrollPopupExit {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(120%) scale(0.85);
+    opacity: 0;
+  }
+}
+
+@keyframes cardScrollPop {
+  0% {
+    transform: translateY(28px) scale(0.94);
+    opacity: 0;
+  }
+  70% {
+    transform: translateY(-4px) scale(1.02);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.anim-scroll-popup {
+  animation: scrollPopupBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.anim-scroll-popup-exit {
+  animation: scrollPopupExit 0.35s ease-in forwards;
+}
+
+.anim-card-pop {
+  animation: cardScrollPop 0.5s cubic-bezier(0.34, 1.45, 0.64, 1) forwards;
+}
+
+/* Prefers Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-sunburst {
+    animation: none !important;
+  }
+  .anim-slide-out-left,
+  .anim-slide-out-right,
+  .anim-slide-in-right,
+  .anim-slide-in-left {
+    animation: simpleFade 0.3s ease forwards !important;
+    transform: rotate(-1deg) !important;
+  }
+  .anim-drop-badge,
+  .anim-pop-sticker,
+  .anim-slide-pill,
+  .anim-photo,
+  .anim-content,
+  .anim-price-pop,
+  .anim-scroll-popup,
+  .anim-card-pop {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+@keyframes simpleFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+
