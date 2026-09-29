@@ -1,0 +1,122 @@
+<mxfile host="app.diagrams.net" modified="2026-08-18T13:54:00.000Z" agent="Antigravity UML Generator" etag="seq_Sequence_Login.drawio" version="24.7.5" type="device">
+  <diagram id="diag_Sequence_Login" name="ONLINE FOOD ORDERING SYSTEM — CUSTOMER LOGIN SEQUENCE DIAGRAM">
+    <mxGraphModel dx="1800" dy="1200" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="title_banner" value="ONLINE FOOD ORDERING SYSTEM — CUSTOMER LOGIN SEQUENCE DIAGRAM" style="shape=mxgraph.bootstrap.rrect;rSize=6;fillColor=#1A237E;strokeColor=#1A237E;strokeWidth=2;fontStyle=1;fontSize=16;fontColor=#FFFFFF;align=center;verticalAlign=middle;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="150" y="20" width="1400" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg_panel" value="&lt;b&gt;Architecture Legend:&lt;/b&gt;  Actor | &lt;font color=&quot;#0288D1&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;Boundary&amp;gt;&amp;gt;&lt;/b&gt;&lt;/font&gt; | &lt;font color=&quot;#7B1FA2&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;Control&amp;gt;&amp;gt;&lt;/b&gt;&lt;/font&gt; | &lt;font color=&quot;#2E7D32&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;Entity&amp;gt;&amp;gt;&lt;/b&gt;&lt;/font&gt; | &lt;font color=&quot;#E65100&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;External System&amp;gt;&amp;gt;&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#BDBDBD;strokeWidth=1;fontSize=11;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="150" y="75" width="1400" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="head_cust" value="Customer" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;strokeColor=#0288D1;strokeWidth=2;fillColor=#E1F5FE;fontStyle=1;fontSize=12;fontColor=#01579B;" vertex="1" parent="1">
+          <mxGeometry x="220" y="120" width="60" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="stem_cust" value="" style="line;strokeWidth=1.5;strokeColor=#0288D1;dashed=1;html=1;direction=south;" vertex="1" parent="1">
+          <mxGeometry x="250" y="220" width="1" height="850" as="geometry"/>
+        </mxCell>
+        <mxCell id="head_login_page" value="&amp;lt;&amp;lt;Boundary&amp;gt;&amp;gt;&amp;#10;:LoginPage" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1F5FE;strokeColor=#0288D1;strokeWidth=2;fontStyle=1;fontSize=11;fontColor=#01579B;align=center;" vertex="1" parent="1">
+          <mxGeometry x="475" y="130" width="150" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="stem_login_page" value="" style="line;strokeWidth=1.5;strokeColor=#0288D1;dashed=1;html=1;direction=south;" vertex="1" parent="1">
+          <mxGeometry x="550" y="200" width="1" height="850" as="geometry"/>
+        </mxCell>
+        <mxCell id="head_auth_ctrl" value="&amp;lt;&amp;lt;Control&amp;gt;&amp;gt;&amp;#10;:AuthController" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3E5F5;strokeColor=#7B1FA2;strokeWidth=2;fontStyle=1;fontSize=11;fontColor=#4A148C;align=center;" vertex="1" parent="1">
+          <mxGeometry x="825" y="130" width="150" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="stem_auth_ctrl" value="" style="line;strokeWidth=1.5;strokeColor=#7B1FA2;dashed=1;html=1;direction=south;" vertex="1" parent="1">
+          <mxGeometry x="900" y="200" width="1" height="850" as="geometry"/>
+        </mxCell>
+        <mxCell id="head_user_entity" value="&amp;lt;&amp;lt;Entity&amp;gt;&amp;gt;&amp;#10;:User" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#2E7D32;strokeWidth=2;fontStyle=1;fontSize=11;fontColor=#1B5E20;align=center;" vertex="1" parent="1">
+          <mxGeometry x="1175" y="130" width="150" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="stem_user_entity" value="" style="line;strokeWidth=1.5;strokeColor=#2E7D32;dashed=1;html=1;direction=south;" vertex="1" parent="1">
+          <mxGeometry x="1250" y="200" width="1" height="850" as="geometry"/>
+        </mxCell>
+        <mxCell id="alt_login" value="alt" style="shape=umlFrame;whiteSpace=wrap;html=1;strokeColor=#C62828;strokeWidth=1.5;fillColor=none;fontStyle=1;fontSize=12;fontColor=#C62828;align=left;spacingLeft=6;" vertex="1" parent="1">
+          <mxGeometry x="200" y="490" width="1100" height="270" as="geometry"/>
+        </mxCell>
+        <mxCell id="alt_login_lbl" value="&lt;b&gt;[Password Matches]&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontStyle=1;fontSize=11;fontColor=#C62828;" vertex="1" parent="1">
+          <mxGeometry x="250" y="495" width="200" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="alt_login_div" value="" style="line;strokeWidth=1.2;strokeColor=#C62828;dashed=1;html=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="640" width="1100" height="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="alt_login_elbl" value="&lt;b&gt;[else: Invalid Credentials]&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontStyle=1;fontSize=11;fontColor=#C62828;" vertex="1" parent="1">
+          <mxGeometry x="210" y="645" width="200" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="m1" value="1: openLoginPage()" edge="1" parent="1" style="html=1;endArrow=block;strokeWidth=1.6;strokeColor=#1565C0;fontSize=11;fontStyle=1;fontColor=#0D47A1;align=center;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="250" y="240" as="sourcePoint"/>
+            <mxPoint x="550" y="240" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m2" value="renderLoginForm()" edge="1" parent="1" style="html=1;endArrow=open;dashed=1;strokeWidth=1.5;strokeColor=#546E7A;fontSize=11;fontColor=#37474F;align=center;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="550" y="280" as="sourcePoint"/>
+            <mxPoint x="250" y="280" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3" value="2: submitCredentials(email, password)" edge="1" parent="1" style="html=1;endArrow=block;strokeWidth=1.6;strokeColor=#1565C0;fontSize=11;fontStyle=1;fontColor=#0D47A1;align=center;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="250" y="330" as="sourcePoint"/>
+            <mxPoint x="550" y="330" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m4" value="3: authenticate(email, password)" edge="1" parent="1" style="html=1;endArrow=block;strokeWidth=1.6;strokeColor=#1565C0;fontSize=11;fontStyle=1;fontColor=#0D47A1;align=center;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="550" y="370" as="sourcePoint"/>
+            <mxPoint x="900" y="370" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m5" value="4: findByEmail(email)" edge="1" parent="1" style="html=1;endArrow=block;strokeWidth=1.6;strokeColor=#1565C0;fontSize=11;fontStyle=1;fontColor=#0D47A1;align=center;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="900" y="420" as="sourcePoint"/>
+            <mxPoint x="1250" y="420" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m6" value="5: userDetails(passwordHash)" edge="1" parent="1" style="html=1;endArrow=open;dashed=1;strokeWidth=1.5;strokeColor=#546E7A;fontSize=11;fontColor=#37474F;align=center;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1250" y="460" as="sourcePoint"/>
+            <mxPoint x="900" y="460" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m7" value="6: createSession(userId)" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;rounded=0;strokeWidth=1.5;strokeColor=#37474F;fontSize=11;fontColor=#263238;align=left;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="900" y="510" as="sourcePoint"/>
+            <mxPoint x="900" y="535" as="targetPoint"/>
+            <Array as="points">
+              <mxPoint x="935" y="510"/>
+              <mxPoint x="935" y="535"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m8" value="7: loginSuccess(sessionToken)" edge="1" parent="1" style="html=1;endArrow=open;dashed=1;strokeWidth=1.5;strokeColor=#546E7A;fontSize=11;fontColor=#37474F;align=center;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="900" y="560" as="sourcePoint"/>
+            <mxPoint x="550" y="560" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m9" value="8: showDashboard(customerData)" edge="1" parent="1" style="html=1;endArrow=open;dashed=1;strokeWidth=1.5;strokeColor=#546E7A;fontSize=11;fontColor=#37474F;align=center;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="550" y="600" as="sourcePoint"/>
+            <mxPoint x="250" y="600" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m10" value="loginFailed(&quot;Invalid credentials&quot;)" edge="1" parent="1" style="html=1;endArrow=open;dashed=1;strokeWidth=1.5;strokeColor=#546E7A;fontSize=11;fontColor=#37474F;align=center;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="900" y="690" as="sourcePoint"/>
+            <mxPoint x="550" y="690" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m11" value="showError(&quot;Invalid email or password&quot;)" edge="1" parent="1" style="html=1;endArrow=open;dashed=1;strokeWidth=1.5;strokeColor=#546E7A;fontSize=11;fontColor=#37474F;align=center;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="550" y="730" as="sourcePoint"/>
+            <mxPoint x="250" y="730" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

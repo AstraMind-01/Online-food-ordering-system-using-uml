@@ -1,0 +1,82 @@
+<mxfile host="app.diagrams.net" version="24.7.5" type="device">
+  <diagram id="diag_obj" name="Object Diagram">
+    <mxGraphModel dx="1800" dy="1300" grid="1" gridSize="10" page="1" pageScale="1" pageWidth="1900" pageHeight="1300">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="title" value="ONLINE FOOD ORDERING SYSTEM — UML OBJECT DIAGRAM (ACTIVE ORDER SNAPSHOT)" style="shape=mxgraph.bootstrap.rrect;rSize=6;fillColor=#1A237E;strokeColor=#1A237E;strokeWidth=2;fontStyle=1;fontSize=18;fontColor=#FFFFFF;align=center;verticalAlign=middle;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="150" y="20" width="1500" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="obj_cust" value="&lt;div style=&quot;text-align:center;padding:4px 0px;border-bottom:1.5px solid #0288D1;background-color:rgba(0,0,0,0.04);margin:-6px -8px 6px -8px;&quot;&gt;&lt;u&gt;&lt;b&gt;customer1 : Customer&lt;/b&gt;&lt;/u&gt;&lt;/div&gt;&lt;div style=&quot;font-size:11px;line-height:1.4;&quot;&gt;userId = &quot;CUST-101&quot;&lt;br/&gt;name = &quot;Rahul Sharma&quot;&lt;br/&gt;email = &quot;rahul.s@example.com&quot;&lt;br/&gt;phone = &quot;+91-9876543210&quot;&lt;br/&gt;address = &quot;Flat 4B, Green Park, Mumbai&quot;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;overflow=hidden;fillColor=#E1F5FE;strokeColor=#0288D1;strokeWidth=2;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="150" y="110" width="290" height="160" as="geometry"/>
+        </mxCell>
+        <mxCell id="obj_cart" value="&lt;div style=&quot;text-align:center;padding:4px 0px;border-bottom:1.5px solid #0288D1;background-color:rgba(0,0,0,0.04);margin:-6px -8px 6px -8px;&quot;&gt;&lt;u&gt;&lt;b&gt;cart1 : Cart&lt;/b&gt;&lt;/u&gt;&lt;/div&gt;&lt;div style=&quot;font-size:11px;line-height:1.4;&quot;&gt;cartId = &quot;CART-8821&quot;&lt;br/&gt;restaurantId = &quot;REST-201&quot;&lt;br/&gt;totalAmount = 360.00&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;overflow=hidden;fillColor=#E1F5FE;strokeColor=#0288D1;strokeWidth=2;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="150" y="360" width="290" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="obj_cartitem" value="&lt;div style=&quot;text-align:center;padding:4px 0px;border-bottom:1.5px solid #0288D1;background-color:rgba(0,0,0,0.04);margin:-6px -8px 6px -8px;&quot;&gt;&lt;u&gt;&lt;b&gt;cartItem1 : CartItem&lt;/b&gt;&lt;/u&gt;&lt;/div&gt;&lt;div style=&quot;font-size:11px;line-height:1.4;&quot;&gt;cartItemId = &quot;CI-901&quot;&lt;br/&gt;quantity = 2&lt;br/&gt;unitPrice = 180.00&lt;br/&gt;subTotal = 360.00&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;overflow=hidden;fillColor=#E1F5FE;strokeColor=#0288D1;strokeWidth=2;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="150" y="560" width="290" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="obj_order" value="&lt;div style=&quot;text-align:center;padding:4px 0px;border-bottom:1.5px solid #2E7D32;background-color:rgba(0,0,0,0.04);margin:-6px -8px 6px -8px;&quot;&gt;&lt;u&gt;&lt;b&gt;order1 : Order&lt;/b&gt;&lt;/u&gt;&lt;/div&gt;&lt;div style=&quot;font-size:11px;line-height:1.4;&quot;&gt;orderId = &quot;ORD-501&quot;&lt;br/&gt;customerId = &quot;CUST-101&quot;&lt;br/&gt;restaurantId = &quot;REST-201&quot;&lt;br/&gt;orderDate = &quot;2026-08-18 13:45&quot;&lt;br/&gt;totalAmount = 405.00&lt;br/&gt;status = &quot;Confirmed&quot;&lt;br/&gt;deliveryAddress = &quot;Flat 4B, Green Park, Mumbai&quot;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;overflow=hidden;fillColor=#E8F5E9;strokeColor=#2E7D32;strokeWidth=2;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="620" y="110" width="310" height="185" as="geometry"/>
+        </mxCell>
+        <mxCell id="obj_orderitem" value="&lt;div style=&quot;text-align:center;padding:4px 0px;border-bottom:1.5px solid #2E7D32;background-color:rgba(0,0,0,0.04);margin:-6px -8px 6px -8px;&quot;&gt;&lt;u&gt;&lt;b&gt;orderItem1 : OrderItem&lt;/b&gt;&lt;/u&gt;&lt;/div&gt;&lt;div style=&quot;font-size:11px;line-height:1.4;&quot;&gt;orderItemId = &quot;OI-5501&quot;&lt;br/&gt;quantity = 2&lt;br/&gt;price = 180.00&lt;br/&gt;subTotal = 360.00&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;overflow=hidden;fillColor=#E8F5E9;strokeColor=#2E7D32;strokeWidth=2;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="620" y="370" width="310" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="obj_food" value="&lt;div style=&quot;text-align:center;padding:4px 0px;border-bottom:1.5px solid #00796B;background-color:rgba(0,0,0,0.04);margin:-6px -8px 6px -8px;&quot;&gt;&lt;u&gt;&lt;b&gt;food1 : FoodItem&lt;/b&gt;&lt;/u&gt;&lt;/div&gt;&lt;div style=&quot;font-size:11px;line-height:1.4;&quot;&gt;foodId = &quot;FOOD-101&quot;&lt;br/&gt;name = &quot;Chicken Biryani&quot;&lt;br/&gt;price = 180.00&lt;br/&gt;description = &quot;Fragrant Basmati rice cooked with spiced chicken&quot;&lt;br/&gt;availability = true&lt;br/&gt;cuisine = &quot;Indian&quot;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;overflow=hidden;fillColor=#E0F2F1;strokeColor=#00796B;strokeWidth=2;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="620" y="570" width="310" height="160" as="geometry"/>
+        </mxCell>
+        <mxCell id="obj_cat" value="&lt;div style=&quot;text-align:center;padding:4px 0px;border-bottom:1.5px solid #00796B;background-color:rgba(0,0,0,0.04);margin:-6px -8px 6px -8px;&quot;&gt;&lt;u&gt;&lt;b&gt;cat1 : Category&lt;/b&gt;&lt;/u&gt;&lt;/div&gt;&lt;div style=&quot;font-size:11px;line-height:1.4;&quot;&gt;categoryId = &quot;CAT-01&quot;&lt;br/&gt;name = &quot;Main Course&quot;&lt;br/&gt;description = &quot;Hearty rice and gravy main courses&quot;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;overflow=hidden;fillColor=#E0F2F1;strokeColor=#00796B;strokeWidth=2;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="620" y="800" width="310" height="115" as="geometry"/>
+        </mxCell>
+        <mxCell id="obj_rest" value="&lt;div style=&quot;text-align:center;padding:4px 0px;border-bottom:1.5px solid #7B1FA2;background-color:rgba(0,0,0,0.04);margin:-6px -8px 6px -8px;&quot;&gt;&lt;u&gt;&lt;b&gt;restaurant1 : Restaurant&lt;/b&gt;&lt;/u&gt;&lt;/div&gt;&lt;div style=&quot;font-size:11px;line-height:1.4;&quot;&gt;restaurantId = &quot;REST-201&quot;&lt;br/&gt;name = &quot;Biryani House&quot;&lt;br/&gt;location = &quot;Andheri West, Mumbai&quot;&lt;br/&gt;contactNumber = &quot;+91-9811223344&quot;&lt;br/&gt;isOpen = true&lt;br/&gt;rating = 4.7&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;overflow=hidden;fillColor=#F3E5F5;strokeColor=#7B1FA2;strokeWidth=2;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="570" width="300" height="160" as="geometry"/>
+        </mxCell>
+        <mxCell id="obj_pay" value="&lt;div style=&quot;text-align:center;padding:4px 0px;border-bottom:1.5px solid #E65100;background-color:rgba(0,0,0,0.04);margin:-6px -8px 6px -8px;&quot;&gt;&lt;u&gt;&lt;b&gt;payment1 : Payment&lt;/b&gt;&lt;/u&gt;&lt;/div&gt;&lt;div style=&quot;font-size:11px;line-height:1.4;&quot;&gt;paymentId = &quot;PAY-9901&quot;&lt;br/&gt;orderId = &quot;ORD-501&quot;&lt;br/&gt;amount = 405.00&lt;br/&gt;paymentMethod = &quot;UPI / GPay&quot;&lt;br/&gt;paymentStatus = &quot;Successful&quot;&lt;br/&gt;transactionDate = &quot;2026-08-18 13:46&quot;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;overflow=hidden;fillColor=#FFF3E0;strokeColor=#E65100;strokeWidth=2;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="110" width="300" height="160" as="geometry"/>
+        </mxCell>
+        <mxCell id="obj_del" value="&lt;div style=&quot;text-align:center;padding:4px 0px;border-bottom:1.5px solid #FFA000;background-color:rgba(0,0,0,0.04);margin:-6px -8px 6px -8px;&quot;&gt;&lt;u&gt;&lt;b&gt;delivery1 : Delivery&lt;/b&gt;&lt;/u&gt;&lt;/div&gt;&lt;div style=&quot;font-size:11px;line-height:1.4;&quot;&gt;deliveryId = &quot;DEL-7701&quot;&lt;br/&gt;orderId = &quot;ORD-501&quot;&lt;br/&gt;partnerId = &quot;PARTNER-303&quot;&lt;br/&gt;deliveryStatus = &quot;Preparing&quot;&lt;br/&gt;deliveryAddress = &quot;Flat 4B, Green Park, Mumbai&quot;&lt;br/&gt;pickupTime = null&lt;br/&gt;deliveryTime = null&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;overflow=hidden;fillColor=#FFF8E1;strokeColor=#FFA000;strokeWidth=2;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;spacingBottom=6;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="340" width="300" height="165" as="geometry"/>
+        </mxCell>
+        <mxCell id="link_cust_cart" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeWidth=2;strokeColor=#0288D1;fontSize=11;fontStyle=1;fontColor=#0288D1;" edge="1" parent="1" source="obj_cust" target="obj_cart">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="link_cart_item" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeWidth=2;strokeColor=#0288D1;fontSize=11;fontStyle=1;fontColor=#0288D1;" edge="1" parent="1" source="obj_cart" target="obj_cartitem">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="link_cartitem_food" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeWidth=2;strokeColor=#00796B;fontSize=11;fontStyle=1;fontColor=#00796B;" edge="1" parent="1" source="obj_cartitem" target="obj_food">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="link_cust_order" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeWidth=2;strokeColor=#2E7D32;fontSize=11;fontStyle=1;fontColor=#2E7D32;" edge="1" parent="1" source="obj_cust" target="obj_order">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="link_order_item" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeWidth=2;strokeColor=#2E7D32;fontSize=11;fontStyle=1;fontColor=#2E7D32;" edge="1" parent="1" source="obj_order" target="obj_orderitem">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="link_orderitem_food" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeWidth=2;strokeColor=#00796B;fontSize=11;fontStyle=1;fontColor=#00796B;" edge="1" parent="1" source="obj_orderitem" target="obj_food">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="link_food_cat" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeWidth=2;strokeColor=#00796B;fontSize=11;fontStyle=1;fontColor=#00796B;" edge="1" parent="1" source="obj_food" target="obj_cat">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="link_rest_food" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeWidth=2;strokeColor=#7B1FA2;fontSize=11;fontStyle=1;fontColor=#7B1FA2;" edge="1" parent="1" source="obj_rest" target="obj_food">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="link_order_rest" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeWidth=2;strokeColor=#7B1FA2;fontSize=11;fontStyle=1;fontColor=#7B1FA2;" edge="1" parent="1" source="obj_order" target="obj_rest">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="960" y="200"/>
+              <mxPoint x="960" y="650"/>
+              <mxPoint x="1100" y="650"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="link_order_pay" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeWidth=2;strokeColor=#E65100;fontSize=11;fontStyle=1;fontColor=#E65100;" edge="1" parent="1" source="obj_order" target="obj_pay">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="link_order_del" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeWidth=2;strokeColor=#FFA000;fontSize=11;fontStyle=1;fontColor=#FFA000;" edge="1" parent="1" source="obj_order" target="obj_del">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -45,7 +45,9 @@ Thumbs.db
 .env.test.local
 .env.production.local
 
-# Gemini / Agent scratch / temp
+# Temporary scripts, scratch, IDE cache
+scratch/
+.system_generated/
 .gemini/
 brain/
 stitch_raw/
