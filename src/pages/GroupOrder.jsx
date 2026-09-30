@@ -223,7 +223,7 @@ export default function GroupOrder() {
   const perPerson = grandTotal / 4;
 
   return (
-    <div className="flex flex-col w-full pb-space-2xl">
+    <div className="flex flex-col w-full pt-8 sm:pt-10 pb-space-2xl">
       {/* Room Control Marquee Header */}
       <section className="w-full mb-space-xl">
         <div className="bg-secondary-fixed rounded-xl p-space-md lg:p-space-lg diner-border shadow-xl relative overflow-hidden">

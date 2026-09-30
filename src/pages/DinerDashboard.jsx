@@ -25,7 +25,7 @@ export default function DinerDashboard() {
   }, []);
 
   return (
-    <div className="flex flex-col w-full pb-space-2xl">
+    <div className="flex flex-col w-full pt-8 sm:pt-10 pb-space-2xl">
       {/* Header Banner */}
       <section className="w-full mb-space-xl">
         <div className="bg-secondary-fixed rounded-xl p-space-md lg:p-space-lg diner-border shadow-xl relative overflow-hidden">

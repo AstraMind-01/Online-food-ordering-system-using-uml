@@ -163,7 +163,7 @@ export default function TrackOrder() {
     : '12:42 PM';
 
   return (
-    <div className="flex flex-col w-full pb-space-2xl">
+    <div className="flex flex-col w-full pt-8 sm:pt-10 pb-space-2xl">
       {/* Vintage Dispatch Marquee / Status Header */}
       <section className="w-full mb-space-lg">
         <div className="bg-surface-container p-space-md lg:p-space-lg rounded-xl diner-border relative overflow-hidden">
