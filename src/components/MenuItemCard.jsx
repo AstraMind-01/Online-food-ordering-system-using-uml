@@ -5,6 +5,7 @@ export default function MenuItemCard({
   cartQty = 0,
   onAddToCart,
   onUpdateQty,
+  onOpenDetail,
 }) {
   if (!item) return null;
 
@@ -14,7 +15,12 @@ export default function MenuItemCard({
 
   return (
     <article className="bg-[#fff8f6] border-[2.5px] border-[#231916] rounded-2xl p-4 sm:p-5 shadow-[4px_4px_0px_#231916] flex flex-col justify-between hover:-translate-y-1 hover:shadow-[6px_6px_0px_#231916] transition-all group">
-      <div>
+      {/* Clickable Card Body opening Food Details Modal */}
+      <div
+        className="cursor-pointer group/card flex-1 flex flex-col"
+        onClick={() => onOpenDetail && onOpenDetail(item)}
+        title="Click to view food recipe, ingredients & order options"
+      >
         {/* Food Photo Container */}
         <div className="relative w-full h-44 rounded-xl overflow-hidden border-2 border-[#231916] shadow-[2px_2px_0px_#231916] mb-4 bg-[#f7e4de]">
           <img
@@ -23,7 +29,7 @@ export default function MenuItemCard({
               'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80'
             }
             alt={item.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-300"
             loading="lazy"
           />
 
@@ -37,11 +43,19 @@ export default function MenuItemCard({
             <span className="material-symbols-outlined text-[13px] text-[#cb4926]">timer</span>
             <span>{prepTime}</span>
           </div>
+
+          {/* Hover Overlay Hint */}
+          <div className="absolute inset-0 bg-[#231916]/40 opacity-0 group-hover/card:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+            <span className="px-3 py-1.5 rounded-lg bg-[#fff8f6] text-[#231916] font-black text-xs uppercase border-2 border-[#231916] shadow-[2px_2px_0px_#231916] flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-sm text-[#cb4926]">visibility</span>
+              <span>View Food Details</span>
+            </span>
+          </div>
         </div>
 
         {/* Food Name & Price Header */}
         <div className="flex items-start justify-between gap-2 mb-1.5">
-          <h3 className="font-headline-sm text-lg font-black uppercase text-[#231916] tracking-tight leading-snug line-clamp-1 group-hover:text-[#cb4926] transition-colors">
+          <h3 className="font-headline-sm text-lg font-black uppercase text-[#231916] tracking-tight leading-snug line-clamp-1 group-hover/card:text-[#cb4926] transition-colors">
             {item.name}
           </h3>
           <span className="font-headline-sm text-lg font-black text-[#cb4926] shrink-0">
@@ -50,13 +64,22 @@ export default function MenuItemCard({
         </div>
 
         {/* Description */}
-        <p className="font-body-sm text-xs text-[#59413b] leading-relaxed line-clamp-2 mb-3">
+        <p className="font-body-sm text-xs text-[#59413b] leading-relaxed line-clamp-2 mb-2 flex-1">
           {item.description || 'Delicious diner classic griddled fresh to order with authentic secret seasonings.'}
         </p>
+
+        {/* Click prompt text */}
+        <div className="inline-flex items-center gap-1 text-[11px] font-black uppercase text-[#cb4926] group-hover/card:text-[#a9310f] mb-3">
+          <span className="material-symbols-outlined text-xs">tune</span>
+          <span className="underline decoration-dotted underline-offset-2">View Details & Customization</span>
+        </div>
       </div>
 
       {/* Action Strip: ADD TO CART vs Quantity Stepper */}
-      <div className="pt-3 border-t-2 border-dashed border-[#231916]/30 mt-2">
+      <div
+        className="pt-3 border-t-2 border-dashed border-[#231916]/30 mt-2"
+        onClick={(e) => e.stopPropagation()}
+      >
         {cartQty > 0 ? (
           <div className="flex items-center justify-between gap-2 bg-[#ffdea7]/60 p-1.5 rounded-xl border border-[#231916]/40">
             <span className="text-xs font-black uppercase text-[#231916] pl-1 flex items-center gap-1">
@@ -67,7 +90,10 @@ export default function MenuItemCard({
             <div className="flex items-center gap-1.5">
               <button
                 type="button"
-                onClick={() => onUpdateQty && onUpdateQty(item, cartQty - 1)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onUpdateQty && onUpdateQty(item, cartQty - 1);
+                }}
                 className="w-8 h-8 rounded-lg bg-white text-[#231916] font-black text-base border-2 border-[#231916] shadow-[1.5px_1.5px_0px_#231916] hover:bg-[#fff1ec] active:translate-x-0.5 active:translate-y-0.5 transition-all flex items-center justify-center cursor-pointer"
                 aria-label="Decrease quantity"
               >
@@ -80,7 +106,10 @@ export default function MenuItemCard({
 
               <button
                 type="button"
-                onClick={() => onUpdateQty && onUpdateQty(item, cartQty + 1)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onUpdateQty && onUpdateQty(item, cartQty + 1);
+                }}
                 className="w-8 h-8 rounded-lg bg-[#cb4926] text-white font-black text-base border-2 border-[#231916] shadow-[1.5px_1.5px_0px_#231916] hover:bg-[#a9310f] active:translate-x-0.5 active:translate-y-0.5 transition-all flex items-center justify-center cursor-pointer"
                 aria-label="Increase quantity"
               >
@@ -91,7 +120,10 @@ export default function MenuItemCard({
         ) : (
           <button
             type="button"
-            onClick={() => onAddToCart && onAddToCart(item)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onAddToCart && onAddToCart(item);
+            }}
             className="w-full py-2.5 px-4 bg-[#cb4926] text-white font-black text-xs uppercase border-2 border-[#231916] rounded-xl shadow-[2px_2px_0px_#231916] hover:bg-[#a9310f] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             <span className="material-symbols-outlined text-sm">shopping_basket</span>

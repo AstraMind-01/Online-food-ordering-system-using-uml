@@ -314,6 +314,13 @@ export default function RestaurantMenuPage() {
   const [cartQuantities, setCartQuantities] = useState({});
   const [toastMessage, setToastMessage] = useState('');
 
+  // Food Details Modal State
+  const [selectedFoodDetail, setSelectedFoodDetail] = useState(null);
+  const [modalQty, setModalQty] = useState(1);
+  const [selectedSide, setSelectedSide] = useState(null);
+  const [selectedAddons, setSelectedAddons] = useState([]);
+  const [specialNote, setSpecialNote] = useState('');
+
   // Fetch Restaurant Details & Menu
   const loadData = async () => {
     setLoading(true);
@@ -381,17 +388,17 @@ export default function RestaurantMenuPage() {
     setToastMessage(msg);
     setTimeout(() => {
       setToastMessage('');
-    }, 3000);
+    }, 3200);
   };
 
-  // Add Item to Cart
+  // Add Item to Cart (Quick-add from card button)
   const handleAddToCart = async (item) => {
     const nextQty = (cartQuantities[item.id] || 0) + 1;
     setCartQuantities((prev) => ({
       ...prev,
       [item.id]: nextQty,
     }));
-    triggerToast(`✓ Added "${item.name}" to cart!`);
+    triggerToast(`✓ Added "${item.name}" to Single Person cart!`);
 
     if (authService.isAuthenticated()) {
       try {
@@ -423,20 +430,126 @@ export default function RestaurantMenuPage() {
     if (authService.isAuthenticated()) {
       try {
         if (newQty <= 0) {
-          // Find cart item ID to remove
           const cart = await cartService.get();
           const found = cart.items?.find((ci) => (ci.foodItem?.id || ci.foodItemId) === item.id);
           if (found) {
             await cartService.removeItem(found.id);
           }
         } else {
-          // Increment or decrement
           await cartService.addItem(item.id, 1);
         }
       } catch (err) {
         console.error('Cart sync error:', err);
       }
     }
+  };
+
+  // Open Details Modal for an item
+  const handleOpenDetail = (item) => {
+    const priceNum = typeof item.price === 'number' ? item.price : parseFloat(item.price || 0);
+    const enriched = {
+      ...item,
+      price: priceNum,
+      badge: item.badgeText || item.badge || '★ CHEF SPECIAL',
+      prepTime: item.prepTimeMins ? `${item.prepTimeMins} Mins` : (item.prepTime || '10 Mins'),
+      calories: item.calories || '550–720 kcal',
+      longDescription:
+        item.longDescription ||
+        item.description ||
+        'Freshly prepared using authentic vintage diner traditions, griddled to perfection with chef secret seasoning, fresh local produce, and premium ingredients.',
+      ingredients: item.ingredients || [
+        'Certified Premium Grade Cuts & Farm Produce',
+        'Wisconsin Aged Melted Cheddar',
+        'Chef Special 1974 Seasoning & Relish',
+        'Butter-Toasted Golden Brioche',
+        'Crispy House-Brined Pickles & Fresh Herbs',
+      ],
+      allergens: item.allergens || 'Contains Dairy, Gluten. Prepared in a diner kitchen handling sesame and eggs.',
+      tags: item.tags || ['Diner Classic', 'Griddled Fresh', 'House Recipe'],
+      sideChoices: item.sideChoices || [
+        { name: 'Crinkle-Cut Fries (Included)', price: 0 },
+        { name: 'Crispy Vidalia Onion Rings', price: 3.0 },
+        { name: 'Golden Truffle Parmesan Tots', price: 3.5 },
+        { name: 'Farmhouse Garden Salad', price: 2.0 },
+        { name: 'Creamy Apple-Cider Slaw', price: 1.5 },
+      ],
+      extraChoices: item.extraChoices || [
+        { name: 'Extra Sharp Melted Cheddar', price: 1.5 },
+        { name: 'Applewood Smoked Bacon Strips', price: 2.0 },
+        { name: 'Fire-Roasted Sliced Jalapeños', price: 1.0 },
+        { name: 'Diner Secret 1974 Relish', price: 0.0 },
+        { name: 'Grilled Caramelized Onions', price: 0.75 },
+      ],
+    };
+
+    setSelectedFoodDetail(enriched);
+    setModalQty(cartQuantities[item.id] || 1);
+    setSelectedSide(enriched.sideChoices[0] || null);
+    setSelectedAddons([]);
+    setSpecialNote('');
+  };
+
+  // Live Modal Total Price Calculation
+  const modalSidePrice = selectedSide?.price || 0;
+  const modalAddonsPrice = selectedAddons.reduce((sum, a) => sum + (a.price || 0), 0);
+  const modalBasePrice = selectedFoodDetail?.price || 0;
+  const modalCalculatedTotal = selectedFoodDetail
+    ? (modalBasePrice + modalSidePrice + modalAddonsPrice) * modalQty
+    : 0;
+
+  // Add for Single Person Order
+  const handleAddSinglePersonOrder = async () => {
+    if (!selectedFoodDetail) return;
+    const item = selectedFoodDetail;
+    const qty = modalQty;
+
+    setCartQuantities((prev) => ({
+      ...prev,
+      [item.id]: (prev[item.id] || 0) + qty,
+    }));
+
+    const sideText = selectedSide && selectedSide.price > 0 ? ` + ${selectedSide.name}` : '';
+    triggerToast(`✓ Added ${qty}x "${item.name}${sideText}" (₹${modalCalculatedTotal.toFixed(2)}) for Single Person Order!`);
+
+    if (authService.isAuthenticated()) {
+      try {
+        await cartService.addItem(item.id, qty);
+      } catch (err) {
+        console.error('Error adding single person order item to cart:', err);
+      }
+    }
+
+    setSelectedFoodDetail(null);
+  };
+
+  // Add to Group Order
+  const handleAddToGroupOrder = async () => {
+    if (!selectedFoodDetail) return;
+    const item = selectedFoodDetail;
+    const qty = modalQty;
+
+    setCartQuantities((prev) => ({
+      ...prev,
+      [item.id]: (prev[item.id] || 0) + qty,
+    }));
+
+    const sideText = selectedSide && selectedSide.price > 0 ? ` + ${selectedSide.name}` : '';
+    triggerToast(`👥 Added ${qty}x "${item.name}${sideText}" (₹${modalCalculatedTotal.toFixed(2)}) to Group Order!`);
+
+    if (authService.isAuthenticated()) {
+      try {
+        const activeGroupCode = sessionStorage.getItem('active_group_code') || localStorage.getItem('active_group_order_id');
+        if (activeGroupCode) {
+          await groupOrderService.addItem(activeGroupCode, item.id, qty);
+        } else {
+          await cartService.addItem(item.id, qty);
+        }
+      } catch (err) {
+        console.warn('Group order sync notice:', err);
+      }
+    }
+
+    setSelectedFoodDetail(null);
   };
 
   const isOpen = restaurant ? restaurant.open !== false : true;
@@ -640,11 +753,277 @@ export default function RestaurantMenuPage() {
                 cartQty={cartQuantities[item.id] || 0}
                 onAddToCart={handleAddToCart}
                 onUpdateQty={handleUpdateQty}
+                onOpenDetail={handleOpenDetail}
               />
             ))}
           </div>
         )}
       </main>
+
+      {/* ========================================================================= */}
+      {/* FOOD ITEM DETAILS & ORDER MODAL (Single Person Order & Group Order)        */}
+      {/* ========================================================================= */}
+      {selectedFoodDetail && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-[#231916]/75 backdrop-blur-xs transition-opacity"
+            onClick={() => setSelectedFoodDetail(null)}
+          />
+
+          {/* Modal Container */}
+          <div className="relative w-full max-w-2xl bg-[#fff8f6] rounded-2xl border-[3px] border-[#231916] shadow-[6px_6px_0px_#231916] z-10 overflow-hidden flex flex-col max-h-[92vh] animate-in zoom-in-95 duration-200">
+            {/* Top Scalloped Header */}
+            <div className="bg-[#ffdea7] px-5 py-3.5 border-b-[3px] border-[#231916] flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-[#cb4926] text-xl font-black">
+                  lunch_dining
+                </span>
+                <span className="font-headline-sm text-xs font-black uppercase text-[#231916] tracking-wider">
+                  Diner Recipe Details &amp; Customization
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedFoodDetail(null)}
+                className="w-8 h-8 rounded-full bg-white hover:bg-[#fff1ec] text-[#231916] flex items-center justify-center border-2 border-[#231916] transition-colors cursor-pointer shadow-[1px_1px_0px_#231916] active:translate-x-0.5 active:translate-y-0.5"
+                title="Close details"
+              >
+                <span className="material-symbols-outlined text-base font-black">close</span>
+              </button>
+            </div>
+
+            {/* Modal Scrollable Body */}
+            <div className="p-4 sm:p-6 overflow-y-auto space-y-5">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
+                {/* Food Image & Quick Badges */}
+                <div className="md:col-span-6 flex flex-col">
+                  <div className="relative w-full h-56 sm:h-64 rounded-xl overflow-hidden border-2 border-[#231916] shadow-[3px_3px_0px_#231916] bg-[#f7e4de]">
+                    <img
+                      src={
+                        selectedFoodDetail.imageUrl ||
+                        'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80'
+                      }
+                      alt={selectedFoodDetail.name}
+                      className="w-full h-full object-cover"
+                    />
+                    <span className="absolute top-2.5 left-2.5 px-2.5 py-1 rounded bg-[#cb4926] text-white font-black text-[11px] uppercase border border-[#231916] shadow-[1px_1px_0px_#231916] tracking-wider">
+                      {selectedFoodDetail.badge}
+                    </span>
+                    <span className="absolute bottom-2.5 right-2.5 px-3 py-1 rounded bg-[#231916] text-[#fed388] font-black text-base border border-[#fed388] shadow-[1px_1px_0px_#231916]">
+                      ₹{selectedFoodDetail.price.toFixed(2)}
+                    </span>
+                  </div>
+
+                  {/* Prep Time & Calorie Pills */}
+                  <div className="grid grid-cols-2 gap-2 mt-3 text-xs">
+                    <div className="p-2.5 rounded-xl bg-[#fff8f6] border-2 border-[#231916] shadow-[2px_2px_0px_#231916] flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-sm text-[#cb4926]">timer</span>
+                      <span className="font-bold text-[#231916]">{selectedFoodDetail.prepTime}</span>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-[#fff8f6] border-2 border-[#231916] shadow-[2px_2px_0px_#231916] flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-sm text-[#fdc65c]">local_fire_department</span>
+                      <span className="font-bold text-[#231916]">{selectedFoodDetail.calories}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Info & Story Details */}
+                <div className="md:col-span-6 flex flex-col justify-between">
+                  <div>
+                    <h3 className="font-headline-lg text-xl sm:text-2xl uppercase font-black text-[#231916] leading-tight">
+                      {selectedFoodDetail.name}
+                    </h3>
+                    <div className="font-headline-lg text-lg font-black text-[#cb4926] mt-1">
+                      ₹{selectedFoodDetail.price.toFixed(2)}
+                    </div>
+                    <p className="font-body-md text-xs text-[#59413b] mt-2 leading-relaxed font-medium">
+                      {selectedFoodDetail.longDescription}
+                    </p>
+
+                    {/* Dietary / Feature Tags */}
+                    <div className="flex flex-wrap gap-1.5 mt-3">
+                      {selectedFoodDetail.tags?.map((tag, i) => (
+                        <span
+                          key={i}
+                          className="px-2 py-0.5 rounded-md bg-[#ffdea7] text-[#231916] border border-[#231916] text-[10px] uppercase font-bold"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Kitchen Ingredients & Allergens Box */}
+                  <div className="mt-4 p-3.5 bg-[#f7e4de] rounded-xl border-2 border-[#231916] text-xs space-y-1.5">
+                    <p className="font-black uppercase text-[#231916] flex items-center gap-1">
+                      <span className="material-symbols-outlined text-xs text-[#cb4926]">restaurant</span>
+                      Fresh Kitchen Ingredients:
+                    </p>
+                    <p className="text-[11px] text-[#59413b] leading-normal font-medium">
+                      {selectedFoodDetail.ingredients?.join(' • ') || 'Premium farm ingredients, griddled with fresh spices.'}
+                    </p>
+                    <p className="text-[10px] text-[#8d716a] italic pt-1 border-t border-[#231916]/20">
+                      Allergen Notice: {selectedFoodDetail.allergens}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Customization Options */}
+              <div className="pt-4 border-t-2 border-dashed border-[#231916]/30 space-y-4">
+                {/* 1. Choice of Side */}
+                {selectedFoodDetail.sideChoices && selectedFoodDetail.sideChoices.length > 0 && (
+                  <div>
+                    <label className="text-xs font-black uppercase text-[#231916] flex items-center justify-between mb-2">
+                      <span className="flex items-center gap-1">
+                        <span className="material-symbols-outlined text-sm text-[#cb4926]">fastfood</span>
+                        1. Select Your Side Choice:
+                      </span>
+                      <span className="text-[10px] font-bold text-[#59413b] italic">Choose one</span>
+                    </label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {selectedFoodDetail.sideChoices.map((side, i) => {
+                        const isSelected = selectedSide?.name === side.name;
+                        return (
+                          <button
+                            key={i}
+                            type="button"
+                            onClick={() => setSelectedSide(side)}
+                            className={`p-2.5 rounded-xl border-2 text-left text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
+                              isSelected
+                                ? 'bg-[#cb4926] text-white border-[#231916] shadow-[2px_2px_0px_#231916]'
+                                : 'bg-white text-[#231916] border-[#231916]/40 hover:border-[#231916]'
+                            }`}
+                          >
+                            <span>{side.name}</span>
+                            <span className="font-black">
+                              {side.price === 0 ? 'Included' : `+₹${side.price.toFixed(2)}`}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* 2. Extra Addons & Toppings */}
+                {selectedFoodDetail.extraChoices && selectedFoodDetail.extraChoices.length > 0 && (
+                  <div>
+                    <label className="text-xs font-black uppercase text-[#231916] flex items-center justify-between mb-2">
+                      <span className="flex items-center gap-1">
+                        <span className="material-symbols-outlined text-sm text-[#cb4926]">add_circle</span>
+                        2. Extra Toppings &amp; Add-ons:
+                      </span>
+                      <span className="text-[10px] font-bold text-[#59413b] italic">Optional</span>
+                    </label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {selectedFoodDetail.extraChoices.map((extra, i) => {
+                        const isChecked = selectedAddons.some((a) => a.name === extra.name);
+                        return (
+                          <button
+                            key={i}
+                            type="button"
+                            onClick={() => {
+                              if (isChecked) {
+                                setSelectedAddons((prev) => prev.filter((a) => a.name !== extra.name));
+                              } else {
+                                setSelectedAddons((prev) => [...prev, extra]);
+                              }
+                            }}
+                            className={`p-2.5 rounded-xl border-2 text-left text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
+                              isChecked
+                                ? 'bg-[#ffdea7] text-[#231916] border-[#231916] shadow-[2px_2px_0px_#231916]'
+                                : 'bg-white text-[#231916] border-[#231916]/40 hover:border-[#231916]'
+                            }`}
+                          >
+                            <span className="flex items-center gap-1.5">
+                              <span className="material-symbols-outlined text-sm">
+                                {isChecked ? 'check_box' : 'check_box_outline_blank'}
+                              </span>
+                              <span>{extra.name}</span>
+                            </span>
+                            <span className="font-black text-[#cb4926]">
+                              {extra.price === 0 ? 'FREE' : `+₹${extra.price.toFixed(2)}`}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* 3. Special Kitchen Instructions */}
+                <div>
+                  <label className="text-xs font-black uppercase text-[#231916] flex items-center gap-1 mb-1">
+                    <span className="material-symbols-outlined text-sm text-[#cb4926]">edit_note</span>
+                    3. Special Chef / Cooking Instructions:
+                  </label>
+                  <input
+                    type="text"
+                    value={specialNote}
+                    onChange={(e) => setSpecialNote(e.target.value)}
+                    placeholder="e.g. Extra crisp bacon, no pickles, sauce on side..."
+                    className="w-full text-xs font-bold bg-white text-[#231916] px-3.5 py-2.5 rounded-xl border-2 border-[#231916] focus:outline-none focus:border-[#cb4926]"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Bottom Action Footer with Dual Buttons */}
+            <div className="bg-[#f7e4de] p-4 border-t-[3px] border-[#231916] flex flex-col sm:flex-row items-center justify-between gap-3">
+              {/* Quantity Stepper */}
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-black uppercase text-[#231916]">Qty:</span>
+                <div className="flex items-center bg-white rounded-xl border-2 border-[#231916] shadow-[2px_2px_0px_#231916] p-0.5">
+                  <button
+                    type="button"
+                    onClick={() => setModalQty((prev) => Math.max(1, prev - 1))}
+                    className="w-7 h-7 rounded-lg bg-[#fff8f6] hover:bg-[#ffdea7] text-[#231916] font-black text-sm transition-colors flex items-center justify-center cursor-pointer"
+                  >
+                    −
+                  </button>
+                  <span className="w-8 text-center font-black text-xs text-[#231916]">
+                    {modalQty}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setModalQty((prev) => prev + 1)}
+                    className="w-7 h-7 rounded-lg bg-[#cb4926] text-white font-black text-sm hover:bg-[#a9310f] transition-colors flex items-center justify-center cursor-pointer"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+
+              {/* Dual Ordering Buttons: Single Person Order vs Group Order */}
+              <div className="flex items-center gap-2.5 w-full sm:w-auto">
+                {/* Button 1: Add for Single Person Order */}
+                <button
+                  type="button"
+                  onClick={handleAddSinglePersonOrder}
+                  className="flex-1 sm:flex-initial py-2.5 px-4 rounded-xl bg-[#cb4926] text-white font-black text-xs uppercase border-2 border-[#231916] shadow-[2px_2px_0px_#231916] hover:bg-[#a9310f] active:translate-x-0.5 active:translate-y-0.5 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                  title="Add to solo personal cart"
+                >
+                  <span className="material-symbols-outlined text-sm">person</span>
+                  <span>Add for Single Person (₹{modalCalculatedTotal.toFixed(2)})</span>
+                </button>
+
+                {/* Button 2: Add to Group Order */}
+                <button
+                  type="button"
+                  onClick={handleAddToGroupOrder}
+                  className="flex-1 sm:flex-initial py-2.5 px-3.5 rounded-xl bg-[#ffdea7] text-[#231916] font-black text-xs uppercase border-2 border-[#231916] shadow-[2px_2px_0px_#231916] hover:bg-[#fed388] active:translate-x-0.5 active:translate-y-0.5 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                  title="Add to shared collaborative booth group order"
+                >
+                  <span className="material-symbols-outlined text-sm">groups</span>
+                  <span>Add to Group Order</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

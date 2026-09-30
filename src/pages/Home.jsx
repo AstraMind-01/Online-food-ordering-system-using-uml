@@ -85,27 +85,57 @@ export default function Home() {
       modalQty
     : 0;
 
-  const handleAddModalToCart = async () => {
+  const handleAddModalSoloOrder = async () => {
     if (!selectedFoodDetail) return;
     const qty = modalQty;
     const item = selectedFoodDetail;
     const sideName = selectedSide?.name ? ` + ${selectedSide.name}` : '';
 
     if (!authService.isAuthenticated()) {
-      setToastMessage(`✓ Added ${qty}x "${item.name}${sideName}" (₹${modalCalculatedTotal.toFixed(2)}) to your cart!`);
-      setTimeout(() => setToastMessage(''), 3000);
+      setToastMessage(`✓ Added ${qty}x "${item.name}${sideName}" (₹${modalCalculatedTotal.toFixed(2)}) for Single Person Order!`);
+      setTimeout(() => setToastMessage(''), 3200);
       setSelectedFoodDetail(null);
       return;
     }
 
     try {
       await cartService.addItem(item.id, qty);
-      setToastMessage(`✓ Added ${qty}x "${item.name}" (₹${modalCalculatedTotal.toFixed(2)}) to your cart!`);
-      setTimeout(() => setToastMessage(''), 3000);
+      setToastMessage(`✓ Added ${qty}x "${item.name}${sideName}" (₹${modalCalculatedTotal.toFixed(2)}) for Single Person Order!`);
+      setTimeout(() => setToastMessage(''), 3200);
     } catch (err) {
       console.error('Failed to add item to cart:', err);
-      setToastMessage(`✓ Added ${qty}x "${item.name}" to cart!`);
-      setTimeout(() => setToastMessage(''), 3000);
+      setToastMessage(`✓ Added ${qty}x "${item.name}" for Single Person Order!`);
+      setTimeout(() => setToastMessage(''), 3200);
+    }
+    setSelectedFoodDetail(null);
+  };
+
+  const handleAddModalGroupOrder = async () => {
+    if (!selectedFoodDetail) return;
+    const qty = modalQty;
+    const item = selectedFoodDetail;
+    const sideName = selectedSide?.name ? ` + ${selectedSide.name}` : '';
+
+    if (!authService.isAuthenticated()) {
+      setToastMessage(`👥 Added ${qty}x "${item.name}${sideName}" (₹${modalCalculatedTotal.toFixed(2)}) to Group Order!`);
+      setTimeout(() => setToastMessage(''), 3200);
+      setSelectedFoodDetail(null);
+      return;
+    }
+
+    try {
+      const activeGroupCode = sessionStorage.getItem('active_group_code') || localStorage.getItem('active_group_order_id');
+      if (activeGroupCode) {
+        await groupOrderService.addItem(activeGroupCode, item.id, qty);
+      } else {
+        await cartService.addItem(item.id, qty);
+      }
+      setToastMessage(`👥 Added ${qty}x "${item.name}${sideName}" (₹${modalCalculatedTotal.toFixed(2)}) to Group Order!`);
+      setTimeout(() => setToastMessage(''), 3200);
+    } catch (err) {
+      console.error('Failed to add group order item:', err);
+      setToastMessage(`👥 Added ${qty}x "${item.name}" to Group Order!`);
+      setTimeout(() => setToastMessage(''), 3200);
     }
     setSelectedFoodDetail(null);
   };
@@ -1206,23 +1236,33 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex items-center gap-2 w-full sm:w-auto">
+              {/* Dual Ordering Action Buttons */}
+              <div className="flex items-center gap-2.5 w-full sm:w-auto">
                 <button
                   type="button"
-                  onClick={handleAddModalToCart}
-                  className="flex-1 sm:flex-initial py-2.5 px-4 rounded-xl bg-[#cb4926] text-white font-label-md text-xs font-black uppercase diner-tag hover:bg-[#a9310f] transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-md active:translate-x-0.5 active:translate-y-0.5"
+                  onClick={handleAddModalSoloOrder}
+                  className="flex-1 sm:flex-initial py-2.5 px-4 rounded-xl bg-[#cb4926] text-white font-black text-xs uppercase border-2 border-[#231916] shadow-[2px_2px_0px_#231916] hover:bg-[#a9310f] active:translate-x-0.5 active:translate-y-0.5 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                  title="Add to solo personal cart"
                 >
-                  <span className="material-symbols-outlined text-sm">add_shopping_cart</span>
-                  <span>Add to Cart (₹{modalCalculatedTotal.toFixed(2)})</span>
+                  <span className="material-symbols-outlined text-sm">person</span>
+                  <span>Add for Single Person (₹{modalCalculatedTotal.toFixed(2)})</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleAddModalGroupOrder}
+                  className="flex-1 sm:flex-initial py-2.5 px-3.5 rounded-xl bg-[#ffdea7] text-[#231916] font-black text-xs uppercase border-2 border-[#231916] shadow-[2px_2px_0px_#231916] hover:bg-[#fed388] active:translate-x-0.5 active:translate-y-0.5 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                  title="Add to shared collaborative group order"
+                >
+                  <span className="material-symbols-outlined text-sm">groups</span>
+                  <span>Add to Group Order</span>
                 </button>
                 <Link
                   to="/restaurants"
-                  className="py-2.5 px-3 rounded-xl bg-white text-[#231916] font-label-md text-xs font-black uppercase diner-tag hover:bg-[#ffdea7] transition-all flex items-center justify-center gap-1 cursor-pointer border border-[#231916] shadow-sm active:translate-x-0.5 active:translate-y-0.5"
+                  className="py-2.5 px-3 rounded-xl bg-white text-[#231916] font-black text-xs uppercase border-2 border-[#231916] shadow-[2px_2px_0px_#231916] hover:bg-[#fff1ec] transition-all flex items-center justify-center gap-1 cursor-pointer active:translate-x-0.5 active:translate-y-0.5"
                   title="View complete diner menu with all 19 items"
                 >
                   <span className="material-symbols-outlined text-sm">restaurant_menu</span>
-                  <span className="hidden sm:inline">All Items</span>
+                  <span className="hidden md:inline">All Diners</span>
                 </Link>
               </div>
             </div>
