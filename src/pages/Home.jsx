@@ -132,7 +132,11 @@ export default function Home() {
     restaurantService.getAll()
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          setRestaurants(data);
+          const merged = FALLBACK_RESTAURANTS.map((fb) => {
+            const match = data.find((d) => d.id === fb.id);
+            return match ? { ...fb, ...match } : fb;
+          });
+          setRestaurants(merged);
         } else {
           setRestaurants(FALLBACK_RESTAURANTS);
         }
@@ -512,29 +516,31 @@ export default function Home() {
                   className="bg-[#fff8f6] border-[2.5px] border-[#231916] rounded-2xl p-5 shadow-[4px_4px_0px_#231916] flex flex-col justify-between hover:-translate-y-1 transition-transform group anim-card-pop scroll-reveal"
                 >
                   <div>
-                    {/* Diner Photo */}
-                    <div className="relative w-full h-44 rounded-xl overflow-hidden border-2 border-[#231916] shadow-[2px_2px_0px_#231916] mb-4 bg-[#f7e4de]">
-                      <img
-                        src={rest.imageUrl || 'https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=800&q=80'}
-                        alt={rest.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
+                    <Link to={`/restaurants?id=${rest.id}`} className="group/diner block">
+                      {/* Diner Photo */}
+                      <div className="relative w-full h-44 rounded-xl overflow-hidden border-2 border-[#231916] shadow-[2px_2px_0px_#231916] mb-4 bg-[#f7e4de]">
+                        <img
+                          src={rest.imageUrl || 'https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=800&q=80'}
+                          alt={rest.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
 
-                      {/* Open Tag */}
-                      <div className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-md bg-[#5e7d56] text-[#f8fff0] font-black text-[10px] uppercase border border-[#231916] shadow-[1px_1px_0px_#231916]">
-                        {rest.open !== false ? '● OPEN NOW' : '○ CLOSED'}
+                        {/* Open Tag */}
+                        <div className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-md bg-[#5e7d56] text-[#f8fff0] font-black text-[10px] uppercase border border-[#231916] shadow-[1px_1px_0px_#231916]">
+                          {rest.open !== false ? '● OPEN NOW' : '○ CLOSED'}
+                        </div>
+
+                        {/* Rating Pill */}
+                        <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-md bg-[#fdc65c] text-[#231916] font-black text-xs border border-[#231916] shadow-[1px_1px_0px_#231916] flex items-center gap-1">
+                          <span>★</span>
+                          <span>{rest.rating || '4.9'}</span>
+                        </div>
                       </div>
 
-                      {/* Rating Pill */}
-                      <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-md bg-[#fdc65c] text-[#231916] font-black text-xs border border-[#231916] shadow-[1px_1px_0px_#231916] flex items-center gap-1">
-                        <span>★</span>
-                        <span>{rest.rating || '4.9'}</span>
-                      </div>
-                    </div>
-
-                    <h3 className="font-headline-md text-xl font-black uppercase text-[#231916] tracking-tight mb-1">
-                      {rest.name}
-                    </h3>
+                      <h3 className="font-headline-md text-xl font-black uppercase text-[#231916] tracking-tight mb-1 group-hover/diner:text-[#cb4926] transition-colors">
+                        {rest.name}
+                      </h3>
+                    </Link>
                     <p className="font-body-sm text-xs text-[#cb4926] font-bold uppercase tracking-wider mb-2">
                       {rest.cuisine || 'American Diner & Grill'}
                     </p>
@@ -546,7 +552,7 @@ export default function Home() {
 
                   <div className="pt-4 border-t-2 border-dashed border-[#231916] mt-4">
                     <Link
-                      to="/restaurants"
+                      to={`/restaurants?id=${rest.id}`}
                       className="w-full flex items-center justify-center gap-2 py-2.5 bg-[#ffdea7] text-[#231916] font-black text-xs uppercase border-2 border-[#231916] rounded-xl shadow-[2px_2px_0px_#231916] hover:bg-[#fed388] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
                     >
                       <span>Explore Diner Menu</span>
@@ -1390,11 +1396,47 @@ const FALLBACK_MENU_ITEMS = [
 const FALLBACK_RESTAURANTS = [
   {
     id: 1,
-    name: 'Chow Chow Retro Diner & Eats',
-    cuisine: 'Classic American Diner, Malts & Burgers',
-    address: '742 Evergreen Terrace, Springfield',
+    name: "Big Bill's Burger Emporium",
+    cuisine: 'Smash Burgers, Melts & Crinkle Fries',
+    address: '742 Evergreen Terrace, Route 66 Mile 42',
     rating: 4.9,
     open: true,
     imageUrl: 'https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 2,
+    name: 'Neon Route 66 Smokehouse & BBQ',
+    cuisine: 'Texas BBQ, Smoked Bacon & Loaded Baskets',
+    address: '888 Neon Boulevard, Route 66 Mile 58',
+    rating: 4.8,
+    open: true,
+    imageUrl: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 3,
+    name: "Sally's Sweet Malts & Soda Fountain",
+    cuisine: 'Handcrafted Malts, Floats & Skillet Desserts',
+    address: '505 Soda Springs Way, Route 66 Mile 19',
+    rating: 5.0,
+    open: true,
+    imageUrl: 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 4,
+    name: 'Drive-In Fried Chicken & Baskets',
+    cuisine: '24-Hr Buttermilk Crispy Chicken & Golden Baskets',
+    address: '102 Starlight Drive-In Lane, Route 66 Mile 35',
+    rating: 4.9,
+    open: true,
+    imageUrl: 'https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 5,
+    name: 'Route 66 All-Day Breakfast & Bakery',
+    cuisine: 'All-Day Pancakes, Sourdough Melts & Fresh Pies',
+    address: '220 Sunrise Highway, Route 66 Mile 12',
+    rating: 4.8,
+    open: true,
+    imageUrl: 'https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=800&q=80',
   },
 ];

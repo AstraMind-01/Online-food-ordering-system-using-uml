@@ -18,7 +18,12 @@ UPDATE users SET password = '$2a$10$wN1iN2QyNlA7h2v6qVwVbOSWd2.kXvKk8U9m5a1l8wz2
 
 -- 2. Restaurant
 INSERT IGNORE INTO restaurants (id, owner_id, name, cuisine, address, rating, is_open, image_url, latitude, longitude)
-VALUES (1, 2, 'Chow Chow Retro Diner & Eats', 'Classic American Diner, Malts & Burgers', '742 Evergreen Terrace, Springfield', 4.9, true, 'https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1200&q=80', 30.2672, -97.7431);
+VALUES 
+(1, 2, 'Big Bill''s Burger Emporium', 'Smash Burgers, Melts & Crinkle Fries', '742 Evergreen Terrace, Route 66 Mile 42', 4.9, true, 'https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1200&q=80', 30.2672, -97.7431),
+(2, 2, 'Neon Route 66 Smokehouse & BBQ', 'Texas BBQ, Smoked Bacon & Loaded Baskets', '888 Neon Boulevard, Route 66 Mile 58', 4.8, true, 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1200&q=80', 30.2710, -97.7410),
+(3, 2, 'Sally''s Sweet Malts & Soda Fountain', 'Handcrafted Malts, Floats & Skillet Desserts', '505 Soda Springs Way, Route 66 Mile 19', 5.0, true, 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=1200&q=80', 30.2650, -97.7450),
+(4, 2, 'Drive-In Fried Chicken & Baskets', '24-Hr Buttermilk Crispy Chicken & Golden Baskets', '102 Starlight Drive-In Lane, Route 66 Mile 35', 4.9, true, 'https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=1200&q=80', 30.2690, -97.7390),
+(5, 2, 'Route 66 All-Day Breakfast & Bakery', 'All-Day Pancakes, Sourdough Melts & Fresh Pies', '220 Sunrise Highway, Route 66 Mile 12', 4.8, true, 'https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=1200&q=80', 30.2630, -97.7480);
 
 -- 3. The 12 Diner Menu Items
 INSERT IGNORE INTO food_items (id, restaurant_id, name, description, price, image_url, category, badge_text, prep_time_mins, available)

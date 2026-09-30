@@ -1,8 +1,107 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { menuService, cartService, orderService, authService } from '../services/api';
 
-// Complete 19-item Diner Menu with culinary specifications, ingredients, and customization choices
+// Route 66 Highway Diner Brands & Details
+export const RESTAURANTS_DATA = [
+  {
+    id: 1,
+    name: "Big Bill's Burger Emporium",
+    shortName: "Big Bill's Burgers",
+    cuisine: "Smash Burgers, Melts & Crinkle Fries",
+    tagline: "Home of the Original 1974 Route 66 Double Smash & Griddled Melts",
+    badge: "★ Flagship Diner",
+    badgeColor: "bg-[#cb4926] text-white",
+    rating: 4.9,
+    reviewCount: 420,
+    address: "742 Evergreen Terrace, Route 66 Mile 42",
+    hours: "Open Late 'til 2 AM",
+    avgPrep: "15–25 min",
+    deliveryFee: "Free over ₹35",
+    watermarkIcon: "lunch_dining",
+    imageUrl: "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1200&q=80",
+    description: "Fresh griddled smash patties, house relish, toasted potato buns, crispy sides, and fountain malts spun on genuine 1958 Hamilton Beach mixers.",
+    foodIds: ['item-1', 'item-2', 'item-5', 'item-8', 'item-3', 'item-6', 'item-10', 'item-12', 'item-4', 'item-18', 'item-19'],
+  },
+  {
+    id: 2,
+    name: "Neon Route 66 Smokehouse & BBQ",
+    shortName: "Route 66 Smokehouse",
+    cuisine: "Texas BBQ, Smoked Bacon & Loaded Baskets",
+    tagline: "Wood-Fired Briskets, Smoky BBQ Melts & Loaded Chili Troughs",
+    badge: "★ Pitmaster Certified",
+    badgeColor: "bg-[#59413b] text-white",
+    rating: 4.8,
+    reviewCount: 385,
+    address: "888 Neon Boulevard, Route 66 Mile 58",
+    hours: "Open 11 AM – Midnight",
+    avgPrep: "20–30 min",
+    deliveryFee: "Free over ₹35",
+    watermarkIcon: "local_fire_department",
+    imageUrl: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1200&q=80",
+    description: "Slow-smoked Texas briskets, bourbon hickory BBQ melts, loaded chili-cheese baskets, and charred frankfurters smothered in roadhouse chili.",
+    foodIds: ['item-8', 'item-9', 'item-20', 'item-24', 'item-3', 'item-6', 'item-14', 'item-18'],
+  },
+  {
+    id: 3,
+    name: "Sally's Sweet Malts & Soda Fountain",
+    shortName: "Sally's Soda Fountain",
+    cuisine: "Handcrafted Malts, Floats & Skillet Desserts",
+    tagline: "Authentic 1950s Soda Counter, Spun Malts & Warm Skillet Desserts",
+    badge: "★ 1958 Vintage Fountain",
+    badgeColor: "bg-[#fdc65c] text-[#231916]",
+    rating: 5.0,
+    reviewCount: 512,
+    address: "505 Soda Springs Way, Route 66 Mile 19",
+    hours: "Open 10 AM – 11 PM",
+    avgPrep: "5–10 min",
+    deliveryFee: "Free over ₹35",
+    watermarkIcon: "icecream",
+    imageUrl: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=1200&q=80",
+    description: "Antique 1950s chrome soda fountain spinning thick malted barley milkshakes, fizzy root beer floats, warm skillet brownies, and grandma's deep-dish pies.",
+    foodIds: ['item-4', 'item-13', 'item-14', 'item-15', 'item-16', 'item-17', 'item-23', 'item-18', 'item-19'],
+  },
+  {
+    id: 4,
+    name: "Drive-In Fried Chicken & Baskets",
+    shortName: "Drive-In Chicken Baskets",
+    cuisine: "24-Hr Buttermilk Crispy Chicken & Golden Baskets",
+    tagline: "24-Hour Herbed Buttermilk Brine, Nashville Hot Crispy Crunch",
+    badge: "★ Super Crispy Award",
+    badgeColor: "bg-[#e53935] text-white",
+    rating: 4.9,
+    reviewCount: 465,
+    address: "102 Starlight Drive-In Lane, Route 66 Mile 35",
+    hours: "Open 11 AM – 1 AM",
+    avgPrep: "15–20 min",
+    deliveryFee: "Free over ₹35",
+    watermarkIcon: "dinner_dining",
+    imageUrl: "https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=1200&q=80",
+    description: "Golden buttermilk chicken dredged in cayenne pepper glaze or garlic honey butter, served in paper-lined baskets with crispy fries, towers of rings, and chilled slaw.",
+    foodIds: ['item-7', 'item-11', 'item-21', 'item-10', 'item-6', 'item-12', 'item-19', 'item-18'],
+  },
+  {
+    id: 5,
+    name: "Route 66 All-Day Breakfast & Bakery",
+    shortName: "Route 66 Breakfast & Pies",
+    cuisine: "All-Day Pancakes, Sourdough Melts & Fresh Pies",
+    tagline: "Fluffy Buttermilk Pancake Towers, Sourdough Melts & Scratch Pies",
+    badge: "★ Scratch-Made Daily",
+    badgeColor: "bg-[#5e7d56] text-white",
+    rating: 4.8,
+    reviewCount: 340,
+    address: "220 Sunrise Highway, Route 66 Mile 12",
+    hours: "Open 6 AM – 8 PM",
+    avgPrep: "10–18 min",
+    deliveryFee: "Free over ₹35",
+    watermarkIcon: "bakery_dining",
+    imageUrl: "https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=1200&q=80",
+    description: "Golden buttermilk pancake towers, buttery sourdough melts, fresh sliced Haas avocado stacks, warm cinnamon apple pies, and fresh-squeezed morning citrus.",
+    foodIds: ['item-22', 'item-2', 'item-5', 'item-16', 'item-17', 'item-4', 'item-19', 'item-18'],
+  },
+];
+
+// Complete 24-item Diner Menu with culinary specifications, ingredients, and customization choices
 const FOOD_ITEMS = [
   // 1. Smash Burgers & Melts
   {
@@ -515,11 +614,170 @@ const FOOD_ITEMS = [
       { name: 'Strawberry Puree Infusion', price: 0.75 }
     ]
   },
+
+  // 6. Smokehouse & Breakfast Additions
+  {
+    id: 'item-20',
+    backendId: 1,
+    name: 'Texas Pit Smoked Brisket Platter',
+    category: 'smash',
+    price: 16.95,
+    badge: '★ 14-Hour Smoked',
+    badgeColor: 'bg-[#59413b] text-white',
+    imageUrl: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80',
+    description: '14-hour hickory-smoked prime beef brisket, caramelized burnt ends, thick Texas toast, dill pickles, and sweet bourbon BBQ.',
+    longDescription: 'Tender slices of USDA prime beef brisket and caramelized burnt ends smoked low and slow over hickory wood for 14 hours. Served with two thick slices of buttered Texas toast, pickled jalapeños, sweet diner slaw, and our rich Kentucky bourbon barbecue sauce.',
+    ingredients: ['Hickory Smoked Prime Brisket', 'Caramelized Burnt Ends', 'Buttered Texas Toast', 'House Bourbon BBQ Dip', 'Dill Pickles'],
+    allergens: 'Contains Dairy, Gluten.',
+    prepTime: '12 mins',
+    calories: '840 kcal',
+    tags: ['14-Hour Smoked', 'Prime Beef', 'Pitmaster Special'],
+    vegetarian: false,
+    sideChoices: [
+      { name: 'Crinkle-Cut Fries', price: 2.50 },
+      { name: 'Crispy Onion Rings', price: 3.00 },
+      { name: 'Texas Pit Beans', price: 2.00 }
+    ],
+    extraChoices: [
+      { name: 'Extra Burnt Ends', price: 3.50 },
+      { name: 'Bourbon BBQ Dip', price: 0.75 }
+    ]
+  },
+  {
+    id: 'item-21',
+    backendId: 5,
+    name: 'Nashville Hot Jumbo Wings',
+    category: 'sides',
+    price: 12.95,
+    badge: '★ Fire Crunch',
+    badgeColor: 'bg-[#cb4926] text-white',
+    imageUrl: 'https://images.unsplash.com/photo-1527477378370-35e69e0ee25f?auto=format&fit=crop&w=800&q=80',
+    description: 'Eight crispy jumbo chicken wings dipped in cayenne-spiced Nashville glaze, served with buttermilk ranch and celery sticks.',
+    longDescription: 'Crisp fried whole jumbo chicken wings tossed in our fiery Nashville cayenne pepper dip, dusted with cracked black pepper and paprika. Served with ice-cold celery and house buttermilk ranch dip.',
+    ingredients: ['Jumbo Chicken Wings', 'Nashville Cayenne Glaze', 'Buttermilk Ranch Dip', 'Crisp Celery Sticks'],
+    allergens: 'Contains Gluten, Dairy. Spicy.',
+    prepTime: '12 mins',
+    calories: '720 kcal',
+    tags: ['Spicy Crunch', '8 Jumbo Wings'],
+    vegetarian: false,
+    sideChoices: [
+      { name: 'Buttermilk Ranch Dip', price: 0 },
+      { name: 'Blue Cheese Dip', price: 0.50 }
+    ],
+    extraChoices: [
+      { name: 'Extra Nashville Hot Dip', price: 0.75 },
+      { name: 'Extra Celery & Carrot Sticks', price: 1.00 }
+    ]
+  },
+  {
+    id: 'item-22',
+    backendId: 8,
+    name: 'Route 66 Fluffy Buttermilk Pancake Stack',
+    category: 'desserts',
+    price: 9.95,
+    badge: '★ Breakfast Classic',
+    badgeColor: 'bg-[#988100] text-white',
+    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD7BfWUcq0oXoxSGCSZBxjEZFpOEBbKDYqXilK4ZSz-UTW1l2mDVIKpjf3LqqrIeTuI1ylkU1rwoqkU6B-T1qImlaueT2CVn7uChQueSjuXVXFxZqW907GsrdWxdnGPlcKwW1hHI6-_QrasZ7Ywu6d4UawaQUkw1zsNcmM779AK2NPrkXkJtbm7es7hLCRqwsAhJ-vN8fXnGmVFTLSSfl-IAdJMGdeXPbYsQaK-dmTGpQ_MyVmlOiDL',
+    description: 'Triple stack of golden griddled buttermilk pancakes served with whipped sweet honey butter and warm pure Vermont maple syrup.',
+    longDescription: 'Light, cloud-fluffy pancakes cooked on the flat-top griddle until golden brown. Crowned with whipped farm honey butter and accompanied by a pitcher of warm grade-A Vermont maple syrup.',
+    ingredients: ['Cultured Buttermilk Batter', 'Farm Sweet Butter', 'Pure Vermont Maple Syrup', 'Powdered Sugar Dust'],
+    allergens: 'Contains Dairy, Gluten, Eggs. Vegetarian.',
+    prepTime: '8 mins',
+    calories: '580 kcal',
+    tags: ['Triple Stack', 'All-Day Breakfast', 'Vegetarian'],
+    vegetarian: true,
+    sideChoices: [
+      { name: 'Pure Vermont Maple Syrup', price: 0 },
+      { name: 'Warm Blueberry Compote', price: 1.50 }
+    ],
+    extraChoices: [
+      { name: 'Crispy Bacon Strips (2)', price: 2.00 },
+      { name: 'Extra Whipped Sweet Butter', price: 0.50 }
+    ]
+  },
+  {
+    id: 'item-23',
+    backendId: 3,
+    name: 'Strawberry Shortcake Fountain Malt',
+    category: 'shakes',
+    price: 6.95,
+    badge: '★ Summer Favorite',
+    badgeColor: 'bg-[#cb4926] text-white',
+    imageUrl: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=800&q=80',
+    description: 'Ripe Oregon strawberries spun with sweet cream custard, crumbled shortcake biscuits, malted milk, and a strawberry crown.',
+    longDescription: 'Fresh Oregon strawberries blended with sweet cream vanilla ice cream, real malted barley powder, and buttery shortcake crumbs. Crowned with whipped cream and fresh strawberry slices.',
+    ingredients: ['Oregon Strawberries', 'Sweet Cream Vanilla Ice Cream', 'Buttery Shortcake Crumbs', 'Malted Barley Powder', 'Fresh Whipped Cream'],
+    allergens: 'Contains Dairy, Gluten. Vegetarian.',
+    prepTime: '5 mins',
+    calories: '540 kcal',
+    tags: ['Fresh Strawberries', 'Malted', 'Vegetarian'],
+    vegetarian: true,
+    sideChoices: [
+      { name: 'Classic 16oz Can', price: 0 }
+    ],
+    extraChoices: [
+      { name: 'Extra Strawberry Compote', price: 0.75 },
+      { name: 'Shortcake Crumble Topping', price: 0.75 }
+    ]
+  },
+  {
+    id: 'item-24',
+    backendId: 4,
+    name: 'Texas Chili Mac & Cheese Skillet',
+    category: 'sides',
+    price: 8.95,
+    badge: '★ Cheesy Comfort',
+    badgeColor: 'bg-[#231916] text-[#fed388]',
+    imageUrl: 'https://images.unsplash.com/photo-1543339308-43e59d6b73a6?auto=format&fit=crop&w=800&q=80',
+    description: 'Cast-iron baked cavatappi pasta in rich cheddar cheese sauce, layered with slow-cooked Texas road chili and green scallions.',
+    longDescription: 'Piping hot cast-iron skillet filled with cavatappi macaroni baked in a three-cheese blend (sharp cheddar, smoked gouda, monterey jack), topped with our slow-simmered beef chili, diced scallions, and toasted panko breadcrumbs.',
+    ingredients: ['Cavatappi Pasta', 'Three-Cheese Sauce', 'Texas Beef Chili', 'Scallions', 'Toasted Panko Breadcrumbs'],
+    allergens: 'Contains Dairy, Gluten.',
+    prepTime: '10 mins',
+    calories: '720 kcal',
+    tags: ['Cast Iron Skillet', 'Three Cheese', 'Hearty'],
+    vegetarian: false,
+    sideChoices: [
+      { name: 'Campfire Dip', price: 0 },
+      { name: 'Garlic Toast Slice', price: 1.00 }
+    ],
+    extraChoices: [
+      { name: 'Extra Melted Cheddar', price: 1.25 },
+      { name: 'Pickled Jalapeño Slices', price: 0.50 }
+    ]
+  },
 ];
 
 export default function RestaurantMenu() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Restaurant Selection State (synced with ?id=...)
+  const urlRestId = searchParams.get('id');
+  const [selectedRestaurantId, setSelectedRestaurantId] = useState(() => {
+    if (urlRestId) {
+      if (urlRestId === 'all') return 'all';
+      const parsed = parseInt(urlRestId, 10);
+      if (RESTAURANTS_DATA.some((r) => r.id === parsed)) return parsed;
+    }
+    return 1; // Default to Big Bill's Burger Emporium
+  });
+
+  // Keep state in sync with URL
+  useEffect(() => {
+    if (urlRestId) {
+      if (urlRestId === 'all') {
+        setSelectedRestaurantId('all');
+      } else {
+        const parsed = parseInt(urlRestId, 10);
+        if (RESTAURANTS_DATA.some((r) => r.id === parsed)) {
+          setSelectedRestaurantId(parsed);
+        }
+      }
+    }
+  }, [urlRestId]);
+
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [orderMode, setOrderMode] = useState('single'); // 'single' (Personal Solo Order) or 'group' (Collab Booth)
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
@@ -711,12 +969,23 @@ export default function RestaurantMenu() {
         }
       } catch {}
 
-      const res = await orderService.create({
-        restaurantId: 1,
-        deliveryAddress: soloAddress || '742 Evergreen Terrace (Booth 4)',
-        deliveryLatitude: 30.2849,
-        deliveryLongitude: -97.7341,
-      });
+      const restIdToUse = typeof currentRestaurant.id === 'number' ? currentRestaurant.id : 1;
+      let res;
+      try {
+        res = await orderService.create({
+          restaurantId: restIdToUse,
+          deliveryAddress: soloAddress || '742 Evergreen Terrace (Booth 4)',
+          deliveryLatitude: 30.2849,
+          deliveryLongitude: -97.7341,
+        });
+      } catch {
+        res = await orderService.create({
+          restaurantId: 1,
+          deliveryAddress: soloAddress || '742 Evergreen Terrace (Booth 4)',
+          deliveryLatitude: 30.2849,
+          deliveryLongitude: -97.7341,
+        });
+      }
 
       if (res && res.id) {
         triggerToast('Single person order placed successfully!');
@@ -745,12 +1014,23 @@ export default function RestaurantMenu() {
         await cartService.addItem(3, 1);
       } catch {}
 
-      const res = await orderService.create({
-        restaurantId: 1,
-        deliveryAddress: '742 Evergreen Terrace, Floor 3, Buzz #04',
-        deliveryLatitude: 30.2849,
-        deliveryLongitude: -97.7341,
-      });
+      const restIdToUse = typeof currentRestaurant.id === 'number' ? currentRestaurant.id : 1;
+      let res;
+      try {
+        res = await orderService.create({
+          restaurantId: restIdToUse,
+          deliveryAddress: '742 Evergreen Terrace, Floor 3, Buzz #04',
+          deliveryLatitude: 30.2849,
+          deliveryLongitude: -97.7341,
+        });
+      } catch {
+        res = await orderService.create({
+          restaurantId: 1,
+          deliveryAddress: '742 Evergreen Terrace, Floor 3, Buzz #04',
+          deliveryLatitude: 30.2849,
+          deliveryLongitude: -97.7341,
+        });
+      }
 
       if (res && res.id) {
         triggerToast('Group delivery order placed successfully!');
@@ -774,12 +1054,64 @@ export default function RestaurantMenu() {
     }
   };
 
-  // Filter items
-  const filteredItems = FOOD_ITEMS.filter((item) => {
+  const currentRestaurant =
+    selectedRestaurantId === 'all'
+      ? {
+          id: 'all',
+          name: 'All Route 66 Highway Diners',
+          shortName: 'All Diners',
+          cuisine: 'Smash Burgers, Smokehouse BBQ, Spun Malts & Fried Chicken',
+          tagline: 'The Complete Highway 66 Food Crawl Experience',
+          badge: '★ Full Diner Roster',
+          badgeColor: 'bg-[#cb4926] text-white',
+          rating: 4.9,
+          reviewCount: 2120,
+          address: 'Historic US Route 66 Diner Strip',
+          hours: "All Diners Open 'til 2 AM",
+          avgPrep: '10–25 min',
+          deliveryFee: 'Free over ₹35',
+          watermarkIcon: 'storefront',
+          imageUrl:
+            'https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1200&q=80',
+          description:
+            'Explore the culinary flavors of Route 66! Switch to any individual diner above to view its griddle specialties, or browse all 24 handcrafted burgers, barbecue melts, crispy baskets, and fountain malts.',
+          foodIds: FOOD_ITEMS.map((f) => f.id),
+        }
+      : RESTAURANTS_DATA.find((r) => r.id === selectedRestaurantId) || RESTAURANTS_DATA[0];
+
+  const handleSelectRestaurant = (id) => {
+    setSelectedRestaurantId(id);
+    setSearchParams({ id: id.toString() }, { replace: true });
+    setSelectedCategory('all');
+    const target = id === 'all' ? null : RESTAURANTS_DATA.find((r) => r.id === id);
+    if (target) {
+      triggerToast(`★ Switched to "${target.name}"! Showing available food items.`);
+    } else {
+      triggerToast('★ Showing all available foods across all Route 66 diners.');
+    }
+  };
+
+  // Available food items for selected restaurant
+  const availableFoodItems =
+    selectedRestaurantId === 'all'
+      ? FOOD_ITEMS
+      : FOOD_ITEMS.filter((it) => currentRestaurant.foodIds.includes(it.id));
+
+  // Filter items by category
+  const filteredItems = availableFoodItems.filter((item) => {
     if (selectedCategory === 'all') return true;
     if (selectedCategory === 'vegetarian') return item.vegetarian;
     return item.category === selectedCategory;
   });
+
+  // Dynamic category counts for available foods
+  const countAll = availableFoodItems.length;
+  const countSmash = availableFoodItems.filter((i) => i.category === 'smash').length;
+  const countSides = availableFoodItems.filter((i) => i.category === 'sides').length;
+  const countShakes = availableFoodItems.filter((i) => i.category === 'shakes').length;
+  const countDesserts = availableFoodItems.filter((i) => i.category === 'desserts').length;
+  const countBeverages = availableFoodItems.filter((i) => i.category === 'beverages').length;
+  const countVeg = availableFoodItems.filter((i) => i.vegetarian).length;
 
   return (
     <div className="flex flex-col gap-space-lg pb-32">
@@ -788,7 +1120,15 @@ export default function RestaurantMenu() {
         <div className="flex items-center gap-2 font-label-md text-label-md text-on-surface-variant">
           <Link to="/" className="hover:text-primary transition-colors">Home</Link>
           <span>/</span>
-          <span className="text-on-surface font-bold">Route 66 Retro Diner</span>
+          <button
+            type="button"
+            onClick={() => handleSelectRestaurant('all')}
+            className="hover:text-primary transition-colors cursor-pointer bg-transparent border-0 p-0 text-inherit font-inherit"
+          >
+            Route 66 Diners
+          </button>
+          <span>/</span>
+          <span className="text-on-surface font-bold">{currentRestaurant.name}</span>
         </div>
 
         {/* Marquee Banner with Mode Switcher */}
@@ -857,41 +1197,166 @@ export default function RestaurantMenu() {
           </div>
         </div>
 
-        {/* Restaurant Header Card */}
+        {/* Route 66 Highway Diners Showcase & Switcher */}
+        <section id="restaurant-showcase-section" className="bg-[#fff8f6] rounded-2xl diner-border p-4 md:p-5 shadow-[4px_4px_0px_#231916] flex flex-col gap-3">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b-2 border-dashed border-[#231916]/30 pb-3">
+            <div className="flex items-center gap-2.5">
+              <span className="material-symbols-outlined text-[#cb4926] text-2xl font-black">storefront</span>
+              <div>
+                <h2 className="font-headline-md text-lg md:text-xl font-black uppercase text-[#231916] tracking-tight flex items-center gap-2">
+                  <span>Route 66 Highway Diners</span>
+                  <span className="text-[11px] font-black uppercase px-2 py-0.5 rounded-full bg-[#ffdea7] text-[#231916] border border-[#231916]">
+                    5 Famous Spots
+                  </span>
+                </h2>
+                <p className="text-xs font-bold text-[#59413b]">
+                  Click any restaurant name below to view its available food menu, griddle specialties &amp; chef recipes!
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => handleSelectRestaurant('all')}
+                className={`px-3 py-1.5 rounded-xl font-label-md text-xs font-black uppercase border-2 border-[#231916] transition-all cursor-pointer flex items-center gap-1.5 ${
+                  selectedRestaurantId === 'all'
+                    ? 'bg-[#cb4926] text-white shadow-[2px_2px_0px_#231916]'
+                    : 'bg-white text-[#231916] hover:bg-[#ffdea7]'
+                }`}
+              >
+                <span className="material-symbols-outlined text-sm">fastfood</span>
+                <span>All Diners ({FOOD_ITEMS.length} Foods)</span>
+              </button>
+            </div>
+          </div>
+
+          {/* 5-Column Responsive Diners Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 pt-1">
+            {RESTAURANTS_DATA.map((rest) => {
+              const isSelected = selectedRestaurantId === rest.id;
+              const count = rest.foodIds.length;
+              return (
+                <button
+                  key={rest.id}
+                  type="button"
+                  onClick={() => handleSelectRestaurant(rest.id)}
+                  className={`text-left p-3 rounded-xl border-2 border-[#231916] transition-all cursor-pointer flex flex-col justify-between group relative overflow-hidden ${
+                    isSelected
+                      ? 'bg-[#231916] text-white shadow-[4px_4px_0px_#cb4926] scale-[1.02] ring-2 ring-[#cb4926]'
+                      : 'bg-white text-[#231916] shadow-[2px_2px_0px_#231916] hover:bg-[#fff1ec] hover:-translate-y-1'
+                  }`}
+                >
+                  {/* Selected Tag */}
+                  {isSelected && (
+                    <div className="absolute top-0 right-0 bg-[#cb4926] text-white text-[9px] font-black uppercase px-2 py-0.5 rounded-bl-lg shadow-sm flex items-center gap-0.5 z-10">
+                      <span>✓</span>
+                      <span>Selected</span>
+                    </div>
+                  )}
+
+                  <div>
+                    {/* Thumbnail Image */}
+                    <div className="relative w-full h-24 rounded-lg overflow-hidden border border-[#231916] mb-2 bg-[#f7e4de]">
+                      <img
+                        src={rest.imageUrl}
+                        alt={rest.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        loading="lazy"
+                      />
+                      <div className="absolute top-1 left-1 px-1.5 py-0.5 rounded bg-[#fdc65c] text-[#231916] font-black text-[10px] flex items-center gap-0.5 border border-[#231916] shadow-xs">
+                        <span>★</span>
+                        <span>{rest.rating}</span>
+                      </div>
+                      <div className="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-[#231916]/85 text-white font-bold text-[9px] backdrop-blur-xs">
+                        {count} Foods
+                      </div>
+                    </div>
+
+                    {/* Restaurant Name */}
+                    <h3 className={`font-headline-sm text-sm font-black uppercase tracking-tight line-clamp-1 group-hover:text-[#cb4926] transition-colors ${
+                      isSelected ? 'text-[#fed388]' : 'text-[#231916]'
+                    }`}>
+                      {rest.name}
+                    </h3>
+
+                    {/* Cuisine */}
+                    <p className={`font-body-xs text-[11px] font-bold line-clamp-1 mt-0.5 ${
+                      isSelected ? 'text-[#ffdea7]' : 'text-[#cb4926]'
+                    }`}>
+                      {rest.cuisine}
+                    </p>
+
+                    <p className={`text-[10px] line-clamp-1 mt-1 ${
+                      isSelected ? 'text-white/70' : 'text-[#59413b]'
+                    }`}>
+                      {rest.address}
+                    </p>
+                  </div>
+
+                  <div className={`mt-2 pt-2 border-t border-dashed flex items-center justify-between text-[11px] font-bold ${
+                    isSelected ? 'border-white/20' : 'border-[#231916]/20'
+                  }`}>
+                    <span className={isSelected ? 'text-white/80' : 'text-[#59413b]'}>
+                      ⏱ {rest.avgPrep}
+                    </span>
+                    <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded ${
+                      isSelected ? 'bg-[#cb4926] text-white shadow-xs' : 'bg-[#e0deda] text-[#231916] group-hover:bg-[#cb4926] group-hover:text-white transition-colors'
+                    }`}>
+                      {isSelected ? 'Viewing Menu' : 'Click to View'}
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Dynamic Restaurant Header Card */}
         <div className="bg-surface-container-low rounded-2xl diner-border p-space-md lg:p-space-lg relative overflow-hidden">
           {/* Decorative Retro Watermark */}
           <div className="absolute -right-8 -bottom-10 opacity-10 pointer-events-none select-none">
-            <span className="material-symbols-outlined text-[240px] text-on-surface">lunch_dining</span>
+            <span className="material-symbols-outlined text-[240px] text-on-surface">
+              {currentRestaurant.watermarkIcon || 'lunch_dining'}
+            </span>
           </div>
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-space-lg relative z-10">
             {/* Brand Title & Details */}
             <div className="flex flex-col gap-space-xs max-w-2xl">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="px-2.5 py-1 rounded bg-primary text-on-primary font-label-sm text-label-sm uppercase diner-tag tracking-wider">
-                  Highway 66 Flavor Stop
+                <span className={`px-2.5 py-1 rounded font-label-sm text-label-sm uppercase diner-tag tracking-wider ${currentRestaurant.badgeColor || 'bg-primary text-on-primary'}`}>
+                  {currentRestaurant.badge || '★ Route 66 Diner'}
                 </span>
                 <span className="px-2.5 py-1 rounded bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm diner-tag flex items-center gap-1 font-bold">
-                  <span className="material-symbols-outlined text-xs">star</span> 4.9 (420 reviews)
+                  <span className="material-symbols-outlined text-xs">star</span> {currentRestaurant.rating} ({currentRestaurant.reviewCount} reviews)
                 </span>
                 <span className="px-2.5 py-1 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm diner-tag">
-                  Open Late 'til 2 AM
+                  {currentRestaurant.hours || "Open Late 'til 2 AM"}
                 </span>
               </div>
               <h1 className="font-display-lg text-display-lg uppercase tracking-tight text-on-surface mt-1">
-                Big Bill's Burger Emporium
+                {currentRestaurant.name}
               </h1>
               <p className="font-body-md text-body-md text-on-surface-variant">
-                Fresh griddled smash patties, house relish, toasted potato buns, crispy sides, and fountain malts spun on genuine 1958 Hamilton Beach mixers.
+                {currentRestaurant.description}
               </p>
               <div className="flex flex-wrap items-center gap-y-2 gap-x-space-md text-on-surface-variant font-label-sm text-label-sm mt-1">
                 <span className="flex items-center gap-1">
-                  <span className="material-symbols-outlined text-base text-primary">timer</span> Avg Prep: 15–25 min
+                  <span className="material-symbols-outlined text-base text-primary">timer</span> Avg Prep: {currentRestaurant.avgPrep || '15–25 min'}
                 </span>
                 <span className="flex items-center gap-1">
-                  <span className="material-symbols-outlined text-base text-secondary">local_shipping</span> Free Delivery over ₹35
+                  <span className="material-symbols-outlined text-base text-secondary">local_shipping</span> {currentRestaurant.deliveryFee || 'Free Delivery over ₹35'}
                 </span>
-                <span className="flex items-center gap-1">
-                  <span className="material-symbols-outlined text-base text-tertiary">touch_app</span> Click any food item for ingredients &amp; customization
+                <span className="flex items-center gap-1 text-[#cb4926] font-bold">
+                  <span className="material-symbols-outlined text-base">location_on</span> {currentRestaurant.address}
+                </span>
+              </div>
+
+              {/* Notification Banner on Selected Diner */}
+              <div className="mt-2 p-2.5 bg-[#ffdea7]/60 rounded-xl border border-[#231916]/30 flex items-center gap-2 text-xs font-bold text-[#231916]">
+                <span className="material-symbols-outlined text-base text-[#cb4926]">restaurant</span>
+                <span>
+                  Showing {availableFoodItems.length} available specialties for {currentRestaurant.name}. Click any food item below to explore full recipe ingredients, allergens &amp; customization!
                 </span>
               </div>
             </div>
@@ -929,74 +1394,86 @@ export default function RestaurantMenu() {
           type="button"
           onClick={() => setSelectedCategory('all')}
         >
-          All Diner Goodies (19)
+          All Available ({countAll})
         </button>
-        <button
-          className={`px-4 py-1.5 rounded-full font-label-md text-label-md diner-tag shrink-0 transition-all cursor-pointer ${
-            selectedCategory === 'smash'
-              ? 'bg-secondary-container text-on-secondary-container font-bold shadow-[2px_2px_0px_#231916]'
-              : 'bg-surface-container text-on-surface hover:bg-surface-container-high'
-          }`}
-          type="button"
-          onClick={() => setSelectedCategory('smash')}
-        >
-          Smash Burgers &amp; Melts (6)
-        </button>
-        <button
-          className={`px-4 py-1.5 rounded-full font-label-md text-label-md diner-tag shrink-0 transition-all cursor-pointer ${
-            selectedCategory === 'sides'
-              ? 'bg-secondary-container text-on-secondary-container font-bold shadow-[2px_2px_0px_#231916]'
-              : 'bg-surface-container text-on-surface hover:bg-surface-container-high'
-          }`}
-          type="button"
-          onClick={() => setSelectedCategory('sides')}
-        >
-          Baskets &amp; Sides (5)
-        </button>
-        <button
-          className={`px-4 py-1.5 rounded-full font-label-md text-label-md diner-tag shrink-0 transition-all cursor-pointer ${
-            selectedCategory === 'shakes'
-              ? 'bg-secondary-container text-on-secondary-container font-bold shadow-[2px_2px_0px_#231916]'
-              : 'bg-surface-container text-on-surface hover:bg-surface-container-high'
-          }`}
-          type="button"
-          onClick={() => setSelectedCategory('shakes')}
-        >
-          Malts &amp; Shakes (4)
-        </button>
-        <button
-          className={`px-4 py-1.5 rounded-full font-label-md text-label-md diner-tag shrink-0 transition-all cursor-pointer ${
-            selectedCategory === 'desserts'
-              ? 'bg-secondary-container text-on-secondary-container font-bold shadow-[2px_2px_0px_#231916]'
-              : 'bg-surface-container text-on-surface hover:bg-surface-container-high'
-          }`}
-          type="button"
-          onClick={() => setSelectedCategory('desserts')}
-        >
-          Desserts &amp; Pies (2)
-        </button>
-        <button
-          className={`px-4 py-1.5 rounded-full font-label-md text-label-md diner-tag shrink-0 transition-all cursor-pointer ${
-            selectedCategory === 'beverages'
-              ? 'bg-secondary-container text-on-secondary-container font-bold shadow-[2px_2px_0px_#231916]'
-              : 'bg-surface-container text-on-surface hover:bg-surface-container-high'
-          }`}
-          type="button"
-          onClick={() => setSelectedCategory('beverages')}
-        >
-          Beverages (2)
-        </button>
-        <button
-          className={`px-4 py-1.5 rounded-full font-label-md text-label-md diner-tag shrink-0 transition-all flex items-center gap-1 cursor-pointer ${
-            selectedCategory === 'vegetarian'
-              ? 'bg-secondary-container text-on-secondary-container font-bold shadow-[2px_2px_0px_#231916]'
-              : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high'
-          }`}
-          type="button"
-          onClick={() => setSelectedCategory('vegetarian')}
-        >
-          <span className="w-2 h-2 rounded-full bg-tertiary"></span> Veggie Friendly (11)
-        </button>
+        {countSmash > 0 && (
+          <button
+            className={`px-4 py-1.5 rounded-full font-label-md text-label-md diner-tag shrink-0 transition-all cursor-pointer ${
+              selectedCategory === 'smash'
+                ? 'bg-secondary-container text-on-secondary-container font-bold shadow-[2px_2px_0px_#231916]'
+                : 'bg-surface-container text-on-surface hover:bg-surface-container-high'
+            }`}
+            type="button"
+            onClick={() => setSelectedCategory('smash')}
+          >
+            Burgers &amp; Melts ({countSmash})
+          </button>
+        )}
+        {countSides > 0 && (
+          <button
+            className={`px-4 py-1.5 rounded-full font-label-md text-label-md diner-tag shrink-0 transition-all cursor-pointer ${
+              selectedCategory === 'sides'
+                ? 'bg-secondary-container text-on-secondary-container font-bold shadow-[2px_2px_0px_#231916]'
+                : 'bg-surface-container text-on-surface hover:bg-surface-container-high'
+            }`}
+            type="button"
+            onClick={() => setSelectedCategory('sides')}
+          >
+            Baskets &amp; Sides ({countSides})
+          </button>
+        )}
+        {countShakes > 0 && (
+          <button
+            className={`px-4 py-1.5 rounded-full font-label-md text-label-md diner-tag shrink-0 transition-all cursor-pointer ${
+              selectedCategory === 'shakes'
+                ? 'bg-secondary-container text-on-secondary-container font-bold shadow-[2px_2px_0px_#231916]'
+                : 'bg-surface-container text-on-surface hover:bg-surface-container-high'
+            }`}
+            type="button"
+            onClick={() => setSelectedCategory('shakes')}
+          >
+            Malts &amp; Shakes ({countShakes})
+          </button>
+        )}
+        {countDesserts > 0 && (
+          <button
+            className={`px-4 py-1.5 rounded-full font-label-md text-label-md diner-tag shrink-0 transition-all cursor-pointer ${
+              selectedCategory === 'desserts'
+                ? 'bg-secondary-container text-on-secondary-container font-bold shadow-[2px_2px_0px_#231916]'
+                : 'bg-surface-container text-on-surface hover:bg-surface-container-high'
+            }`}
+            type="button"
+            onClick={() => setSelectedCategory('desserts')}
+          >
+            Desserts &amp; Pies ({countDesserts})
+          </button>
+        )}
+        {countBeverages > 0 && (
+          <button
+            className={`px-4 py-1.5 rounded-full font-label-md text-label-md diner-tag shrink-0 transition-all cursor-pointer ${
+              selectedCategory === 'beverages'
+                ? 'bg-secondary-container text-on-secondary-container font-bold shadow-[2px_2px_0px_#231916]'
+                : 'bg-surface-container text-on-surface hover:bg-surface-container-high'
+            }`}
+            type="button"
+            onClick={() => setSelectedCategory('beverages')}
+          >
+            Beverages ({countBeverages})
+          </button>
+        )}
+        {countVeg > 0 && (
+          <button
+            className={`px-4 py-1.5 rounded-full font-label-md text-label-md diner-tag shrink-0 transition-all flex items-center gap-1 cursor-pointer ${
+              selectedCategory === 'vegetarian'
+                ? 'bg-secondary-container text-on-secondary-container font-bold shadow-[2px_2px_0px_#231916]'
+                : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high'
+            }`}
+            type="button"
+            onClick={() => setSelectedCategory('vegetarian')}
+          >
+            <span className="w-2 h-2 rounded-full bg-tertiary"></span> Veggie Friendly ({countVeg})
+          </button>
+        )}
       </section>
 
       {/* Main Full-Width Food Menu Grid (3 Columns) */}
@@ -1006,13 +1483,7 @@ export default function RestaurantMenu() {
           <div className="flex items-center gap-space-xs">
             <span className="material-symbols-outlined text-primary text-3xl">restaurant_menu</span>
             <h2 className="font-headline-xl text-headline-xl uppercase tracking-tight text-on-surface">
-              {selectedCategory === 'all' && 'All Diner Specials & Goodies (19)'}
-              {selectedCategory === 'smash' && 'Smash Burgers, Melts & Sandwiches (6)'}
-              {selectedCategory === 'sides' && 'Diner Baskets & Crispy Sides (5)'}
-              {selectedCategory === 'shakes' && 'Fountain Malts & Shakes (4)'}
-              {selectedCategory === 'desserts' && 'Homemade Desserts & Pies (2)'}
-              {selectedCategory === 'beverages' && 'Handcrafted Cold Beverages (2)'}
-              {selectedCategory === 'vegetarian' && '100% Vegetarian Friendly Diner Picks (11)'}
+              {currentRestaurant.name} — Available Menu ({filteredItems.length})
             </h2>
           </div>
           <span className="font-label-sm text-label-sm uppercase bg-surface-container px-3 py-1 rounded diner-tag font-bold">
@@ -1057,10 +1528,29 @@ export default function RestaurantMenu() {
                     {item.name}
                   </h3>
                 </div>
+
+                {/* Culinary Specs Pills */}
+                <div className="flex items-center gap-2 mt-1 text-[11px] font-bold text-[#59413b]">
+                  <span className="flex items-center gap-0.5">
+                    <span className="material-symbols-outlined text-xs text-[#cb4926]">timer</span> {item.prepTime}
+                  </span>
+                  <span>•</span>
+                  <span className="flex items-center gap-0.5">
+                    <span className="material-symbols-outlined text-xs text-[#988100]">local_fire_department</span> {item.calories}
+                  </span>
+                </div>
+
                 <p className="font-body-sm text-xs text-on-surface-variant mt-1.5 leading-relaxed line-clamp-3">
                   {item.description}
                 </p>
-                <div className="flex flex-wrap gap-1 mt-3">
+
+                {/* View Details Prompt Pill */}
+                <div className="mt-2.5 inline-flex items-center gap-1.5 text-[11px] font-black uppercase text-[#cb4926] group-hover/card:text-[#a9310f] transition-colors">
+                  <span className="material-symbols-outlined text-sm">tune</span>
+                  <span className="underline decoration-dotted underline-offset-2">View Ingredients &amp; Customization</span>
+                </div>
+
+                <div className="flex flex-wrap gap-1 mt-2.5">
                   {item.tags.map((tag, i) => (
                     <span
                       key={i}
