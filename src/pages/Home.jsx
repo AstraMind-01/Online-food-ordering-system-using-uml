@@ -116,6 +116,23 @@ export default function Home() {
     const item = selectedFoodDetail;
     const sideName = selectedSide?.name ? ` + ${selectedSide.name}` : '';
 
+    try {
+      const stored = localStorage.getItem('group_order_tray_items');
+      const existing = stored ? JSON.parse(stored) : [];
+      existing.push({
+        id: `tray-home-${Date.now()}-${item.id}`,
+        foodItemId: item.id,
+        name: item.name,
+        desc: sideName ? `${sideName.replace(' + ', '')} • Diner Griddle` : (item.description || 'Diner Griddle Special'),
+        price: (item.price || 0) + (selectedSide?.price || 0),
+        quantity: qty,
+        img: item.imageUrl || item.image,
+      });
+      localStorage.setItem('group_order_tray_items', JSON.stringify(existing));
+    } catch (e) {
+      console.warn('Could not save group order tray item', e);
+    }
+
     if (!authService.isAuthenticated()) {
       setToastMessage(`👥 Added ${qty}x "${item.name}${sideName}" (₹${modalCalculatedTotal.toFixed(2)}) to Group Order!`);
       setTimeout(() => setToastMessage(''), 3200);

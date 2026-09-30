@@ -539,6 +539,23 @@ export default function RestaurantMenuPage() {
     const sideText = selectedSide && selectedSide.price > 0 ? ` + ${selectedSide.name}` : '';
     triggerToast(`👥 Added ${qty}x "${item.name}${sideText}" (₹${modalCalculatedTotal.toFixed(2)}) to Group Order!`);
 
+    try {
+      const stored = localStorage.getItem('group_order_tray_items');
+      const existing = stored ? JSON.parse(stored) : [];
+      existing.push({
+        id: `tray-menu-${Date.now()}-${item.id}`,
+        foodItemId: item.id,
+        name: item.name,
+        desc: sideText ? `${sideText.replace(' + ', '')} • Diner Griddle` : (item.description || 'Diner Griddle Special'),
+        price: (item.price || 0) + (selectedSide?.price || 0),
+        quantity: qty,
+        img: item.imageUrl || item.image,
+      });
+      localStorage.setItem('group_order_tray_items', JSON.stringify(existing));
+    } catch (e) {
+      console.warn('Could not save group order tray item', e);
+    }
+
     if (authService.isAuthenticated()) {
       try {
         const activeGroupCode = sessionStorage.getItem('active_group_code') || localStorage.getItem('active_group_order_id');
