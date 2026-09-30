@@ -60,6 +60,7 @@ export default function App() {
           <Route path="/restaurants/:id" element={<RestaurantMenuPage />} />
           <Route path="/restaurants-and-menus" element={<RestaurantListing />} />
           <Route path="/restaurant-menu" element={<RestaurantListing />} />
+          <Route path="/cart" element={<Navigate to="/restaurants#cart" replace />} />
           <Route path="/group-ordering" element={<GroupOrder />} />
           <Route path="/group-order" element={<GroupOrder />} />
           <Route path="/track-order" element={<TrackOrder />} />

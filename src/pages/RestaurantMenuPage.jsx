@@ -407,6 +407,7 @@ export default function RestaurantMenuPage() {
         console.error('Error adding item to backend cart:', err);
       }
     }
+    window.dispatchEvent(new Event('cart-updated'));
   };
 
   // Update Item Quantity in Cart (+ or -)
@@ -442,6 +443,7 @@ export default function RestaurantMenuPage() {
         console.error('Cart sync error:', err);
       }
     }
+    window.dispatchEvent(new Event('cart-updated'));
   };
 
   // Open Details Modal for an item
@@ -518,6 +520,7 @@ export default function RestaurantMenuPage() {
         console.error('Error adding single person order item to cart:', err);
       }
     }
+    window.dispatchEvent(new Event('cart-updated'));
 
     setSelectedFoodDetail(null);
   };
@@ -548,6 +551,7 @@ export default function RestaurantMenuPage() {
         console.warn('Group order sync notice:', err);
       }
     }
+    window.dispatchEvent(new Event('cart-updated'));
 
     setSelectedFoodDetail(null);
   };

@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { authService, cartService } from '../services/api';
+import CartDrawer from './CartDrawer';
 
 export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const [currentUser, setCurrentUser] = useState(() => authService.getCurrentUser());
   const [cartCount, setCartCount] = useState(0);
+  const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
 
   // Sync auth & cart status
-  useEffect(() => {
+  const fetchCartCount = () => {
     const user = authService.getCurrentUser();
     setCurrentUser(user);
 
@@ -19,13 +21,46 @@ export default function Navbar() {
           if (cart && Array.isArray(cart.items)) {
             const count = cart.items.reduce((sum, item) => sum + (item.quantity || 1), 0);
             setCartCount(count);
+          } else {
+            setCartCount(0);
           }
         })
         .catch(() => {});
     } else {
-      setCartCount(0);
+      try {
+        const local = JSON.parse(localStorage.getItem('chow_local_cart') || '[]');
+        const count = local.reduce((sum, item) => sum + (item.quantity || 1), 0);
+        setCartCount(count);
+      } catch {
+        setCartCount(0);
+      }
     }
+  };
+
+  useEffect(() => {
+    fetchCartCount();
   }, [location.pathname]);
+
+  // Handle hash triggers and custom cart update events
+  useEffect(() => {
+    if (location.hash === '#cart' || location.hash === '#shared-ticket') {
+      setCartDrawerOpen(true);
+    }
+
+    const handleCartSync = () => {
+      fetchCartCount();
+    };
+    const handleOpenDrawer = () => {
+      setCartDrawerOpen(true);
+    };
+
+    window.addEventListener('cart-updated', handleCartSync);
+    window.addEventListener('open-cart-drawer', handleOpenDrawer);
+    return () => {
+      window.removeEventListener('cart-updated', handleCartSync);
+      window.removeEventListener('open-cart-drawer', handleOpenDrawer);
+    };
+  }, [location.hash]);
 
   const handleLogout = () => {
     authService.logout();
@@ -121,11 +156,13 @@ export default function Navbar() {
 
         {/* Right Section: Cart + Auth Buttons */}
         <div className="flex items-center gap-3">
-          {/* Cart Icon with Item-Count Sticker */}
-          <Link
-            to="/restaurants#shared-ticket"
+          {/* Cart Button with Item-Count Sticker */}
+          <button
+            type="button"
+            onClick={() => setCartDrawerOpen(true)}
             className="relative flex items-center gap-1.5 px-3.5 py-1.5 bg-[#ffdea7] text-[#231916] font-black text-xs uppercase rounded-xl border-2 border-[#231916] shadow-[2px_2px_0px_#231916] hover:bg-[#fed388] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
-            title="View Cart"
+            title="View Order Guest Check & Cart"
+            aria-label="Open Cart Drawer"
           >
             <span className="material-symbols-outlined text-base">shopping_cart</span>
             <span className="hidden sm:inline">Cart</span>
@@ -138,7 +175,7 @@ export default function Navbar() {
                 0
               </span>
             )}
-          </Link>
+          </button>
 
           {/* Auth State */}
           {currentUser ? (
@@ -185,6 +222,18 @@ export default function Navbar() {
           )}
         </div>
       </div>
+
+      {/* Slide-Over Order Guest Check / Cart Drawer */}
+      <CartDrawer
+        isOpen={cartDrawerOpen}
+        onClose={() => {
+          setCartDrawerOpen(false);
+          if (window.location.hash === '#cart' || window.location.hash === '#shared-ticket') {
+            window.history.replaceState(null, '', window.location.pathname);
+          }
+        }}
+        onCartChange={fetchCartCount}
+      />
     </header>
   );
 }
