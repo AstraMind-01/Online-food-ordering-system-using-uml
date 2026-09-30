@@ -32,18 +32,18 @@ export default function DinerDashboard() {
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md relative z-10">
             <div className="space-y-space-xs">
               <div className="flex items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-full bg-primary text-on-primary font-label-sm text-label-sm uppercase tracking-wider diner-tag">
-                  Diner Hub
+                <span className="px-3 py-1 rounded-full bg-primary text-on-primary font-label-sm text-xs uppercase tracking-wider diner-tag font-black">
+                  ★ CUSTOMER PORTAL ★
                 </span>
                 <span className="font-label-md text-label-md text-secondary font-bold tracking-wide">
                   MEMBER #{currentUser?.id ? `CHOW-${currentUser.id}` : 'CHOW-1974'}
                 </span>
               </div>
               <h1 className="font-headline-xl text-headline-xl text-on-surface uppercase tracking-tight">
-                Welcome Back, {currentUser?.name || 'Sally'}!
+                Customer Portal • Welcome, {currentUser?.name || 'Sally Brady'}!
               </h1>
               <p className="font-body-md text-body-md text-on-surface">
-                Manage your active table booths, check split histories, and reward stamp cards.
+                Manage your active personal orders, collaborative table booths, check split receipts, and track live deliveries.
               </p>
             </div>
 

@@ -61,6 +61,10 @@ export default function App() {
           <Route path="/group-order" element={<GroupOrder />} />
           <Route path="/track-order" element={<TrackOrder />} />
           <Route path="/diner-dashboard" element={<DinerDashboard />} />
+          <Route path="/customer-portal" element={<DinerDashboard />} />
+          <Route path="/customer-dashboard" element={<DinerDashboard />} />
+          <Route path="/customer/dashboard" element={<DinerDashboard />} />
+          <Route path="/customer" element={<DinerDashboard />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Login />} />
         </Route>

@@ -78,6 +78,29 @@ export default function Navbar() {
           <NavLink to="/restaurants" className={navLinkClass}>
             Restaurants
           </NavLink>
+
+          {/* Active Portal Links based on User Role */}
+          {currentUser && (currentUser.role === 'CUSTOMER' || !currentUser.role) && (
+            <NavLink to="/diner-dashboard" className={navLinkClass}>
+              Customer Portal
+            </NavLink>
+          )}
+          {currentUser?.role === 'RESTAURANT' && (
+            <NavLink to="/restaurant/dashboard" className={navLinkClass}>
+              Restaurant Portal
+            </NavLink>
+          )}
+          {currentUser?.role === 'DELIVERY_PARTNER' && (
+            <NavLink to="/delivery/dashboard" className={navLinkClass}>
+              Delivery Portal
+            </NavLink>
+          )}
+          {currentUser?.role === 'ADMIN' && (
+            <NavLink to="/admin/dashboard" className={navLinkClass}>
+              Admin Portal
+            </NavLink>
+          )}
+
           <button
             type="button"
             onClick={() => scrollToSection('how-it-works')}
@@ -131,10 +154,19 @@ export default function Navbar() {
                     ? '/delivery/dashboard'
                     : '/diner-dashboard'
                 }
-                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-[#f7e4de] border-2 border-[#231916] rounded-xl text-xs font-bold uppercase shadow-[2px_2px_0px_#231916] hover:bg-[#ffece6]"
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-[#f7e4de] border-2 border-[#231916] rounded-xl text-xs font-black uppercase shadow-[2px_2px_0px_#231916] hover:bg-[#ffece6] transition-all"
+                title="Go to Portal Dashboard"
               >
                 <span className="material-symbols-outlined text-sm text-[#cb4926]">account_circle</span>
-                <span className="max-w-[100px] truncate">{currentUser.name || 'Account'}</span>
+                <span className="max-w-[130px] truncate">
+                  {currentUser.role === 'CUSTOMER' || !currentUser.role
+                    ? 'Customer Portal'
+                    : currentUser.role === 'RESTAURANT'
+                    ? 'Restaurant Portal'
+                    : currentUser.role === 'DELIVERY_PARTNER'
+                    ? 'Delivery Portal'
+                    : 'Admin Portal'}
+                </span>
               </Link>
 
               <button
