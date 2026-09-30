@@ -91,7 +91,7 @@ export default function RestaurantListing() {
   }, []);
 
   return (
-    <div className="flex flex-col w-full pb-20">
+    <div className="flex flex-col w-full pt-8 sm:pt-10 pb-20">
       {/* Retro Section Heading with Zigzag Underline */}
       <section className="mb-10 text-center">
         <SectionHeading

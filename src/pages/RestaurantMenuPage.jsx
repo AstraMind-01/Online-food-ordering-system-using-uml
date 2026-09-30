@@ -555,7 +555,7 @@ export default function RestaurantMenuPage() {
   const isOpen = restaurant ? restaurant.open !== false : true;
 
   return (
-    <div className="flex flex-col w-full pb-24">
+    <div className="flex flex-col w-full pt-8 sm:pt-10 pb-24">
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 bg-[#fff8f6] border-[2.5px] border-[#231916] rounded-xl px-5 py-3 shadow-[4px_4px_0px_#231916] flex items-center gap-3 animate-in slide-in-from-bottom-5">
