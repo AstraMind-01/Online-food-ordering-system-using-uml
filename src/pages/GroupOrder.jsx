@@ -1,14 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import QRCode from 'qrcode';
 import { orderService, cartService, authService, groupOrderService } from '../services/api';
 
 export default function GroupOrder() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const roomCode = searchParams.get('room') || 'CHOW-7492';
+
   const [billingMode, setBillingMode] = useState('host');
   const [autoLock, setAutoLock] = useState(true);
   const [timerSeconds, setTimerSeconds] = useState(12 * 60 + 45);
   const [copiedLink, setCopiedLink] = useState(false);
   const [showQrModal, setShowQrModal] = useState(false);
+  const [qrDataUrl, setQrDataUrl] = useState('');
+  const [inviteModalTab, setInviteModalTab] = useState('qr'); // 'qr' | 'link' | 'direct'
+  const [coworkerName, setCoworkerName] = useState('');
+  const [coworkerEmail, setCoworkerEmail] = useState('');
+  const [inviteFeedback, setInviteFeedback] = useState('');
+  const [toastMessage, setToastMessage] = useState('');
   const [tipPercent, setTipPercent] = useState(18);
   const [isLocking, setIsLocking] = useState(false);
   const [banterMessages, setBanterMessages] = useState([
@@ -58,10 +68,102 @@ export default function GroupOrder() {
     return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
   };
 
+  const triggerToast = (msg) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(''), 3000);
+  };
+
+  const getInviteUrl = () => {
+    if (typeof window !== 'undefined' && window.location) {
+      return `${window.location.origin}/group-ordering?room=${roomCode}`;
+    }
+    return `http://localhost:3000/group-ordering?room=${roomCode}`;
+  };
+
+  // Generate genuine high-resolution scannable QR Code
+  useEffect(() => {
+    const url = getInviteUrl();
+    QRCode.toDataURL(url, {
+      width: 320,
+      margin: 2,
+      color: {
+        dark: '#231916',
+        light: '#ffffff',
+      },
+      errorCorrectionLevel: 'H',
+    })
+      .then((dataUri) => {
+        setQrDataUrl(dataUri);
+      })
+      .catch((err) => {
+        console.error('QR generation failed:', err);
+      });
+  }, [roomCode]);
+
+  useEffect(() => {
+    if (searchParams.get('room')) {
+      triggerToast(`Welcome! You joined booth table #${roomCode}`);
+    }
+  }, [searchParams]);
+
   const handleCopyLink = () => {
-    navigator.clipboard?.writeText('https://chowchow.diner/group/CHOW-7492').catch(() => {});
-    setCopiedLink(true);
-    setTimeout(() => setCopiedLink(false), 2000);
+    const url = getInviteUrl();
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url)
+        .then(() => {
+          setCopiedLink(true);
+          triggerToast('Table invite link copied to clipboard!');
+          setTimeout(() => setCopiedLink(false), 2500);
+        })
+        .catch(() => {
+          setCopiedLink(true);
+          triggerToast('Table invite link copied to clipboard!');
+          setTimeout(() => setCopiedLink(false), 2500);
+        });
+    } else {
+      setCopiedLink(true);
+      triggerToast('Table invite link copied to clipboard!');
+      setTimeout(() => setCopiedLink(false), 2500);
+    }
+  };
+
+  const handleShare = async () => {
+    const url = getInviteUrl();
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `Join Diner Booth Feast #${roomCode}`,
+          text: `Hey! Hop onto our Chow Chow Diner collaborative tray: ${url}`,
+          url: url,
+        });
+      } catch (err) {}
+    } else {
+      handleCopyLink();
+    }
+  };
+
+  const handleDirectInvite = (e) => {
+    e?.preventDefault();
+    const name = coworkerName.trim() || 'Coworker';
+    const email = coworkerEmail.trim();
+    if (!name && !email) return;
+
+    setBanterMessages((prev) => [
+      ...prev,
+      {
+        id: Date.now(),
+        type: 'action',
+        author: 'Sally (Host)',
+        text: `sent booth invitation to ${name}${email ? ` (${email})` : ''}`,
+        time: 'Just now',
+      },
+    ]);
+
+    setInviteFeedback(`✓ Invitation created for ${name}! They can join booth #${roomCode}.`);
+    triggerToast(`Invite sent to ${name}!`);
+    setCoworkerName('');
+    setCoworkerEmail('');
+    setTimeout(() => setInviteFeedback(''), 4000);
   };
 
   const handleSendMessage = (e) => {
@@ -134,7 +236,7 @@ export default function GroupOrder() {
                   Live Order Session
                 </span>
                 <span className="font-label-md text-label-md text-secondary font-bold tracking-wide">
-                  ROOM #CHOW-7492
+                  ROOM #{roomCode}
                 </span>
               </div>
               <h1 className="font-headline-xl text-headline-xl text-on-surface uppercase tracking-tight">
@@ -506,23 +608,49 @@ export default function GroupOrder() {
             </div>
 
             {/* Card 5: + Invite Another Buddy */}
-            <button
-              className="w-full h-full min-h-[180px] rounded-xl border-2 border-dashed border-outline hover:border-primary bg-surface-container-low hover:bg-secondary-fixed/30 p-space-md flex flex-col items-center justify-center gap-2 transition-all group cursor-pointer text-left"
-              type="button"
+            <div
+              className="w-full h-full min-h-[190px] rounded-xl border-2 border-dashed border-[#231916]/40 hover:border-[#cb4926] bg-surface-container-low hover:bg-[#ffdea7]/30 p-space-md flex flex-col items-center justify-center gap-2 transition-all group cursor-pointer text-left relative"
               onClick={() => setShowQrModal(true)}
             >
-              <div className="w-12 h-12 rounded-full bg-surface-container-lowest diner-tag flex items-center justify-center group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 rounded-full bg-surface-container-lowest diner-tag flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm">
                 <span className="material-symbols-outlined text-2xl text-primary font-bold">
                   person_add
                 </span>
               </div>
-              <span className="font-headline-sm text-headline-sm text-on-surface uppercase group-hover:text-primary transition-colors">
+              <span className="font-headline-sm text-headline-sm text-on-surface uppercase group-hover:text-primary transition-colors font-black">
                 + Invite Coworker
               </span>
-              <span className="font-body-sm text-body-sm text-on-surface-variant text-center">
-                Share link with your team to hop in
+              <span className="font-body-sm text-xs text-on-surface-variant text-center">
+                Share live link or scan QR code to hop in
               </span>
-            </button>
+              <div className="flex items-center gap-2 mt-1.5">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setInviteModalTab('qr');
+                    setShowQrModal(true);
+                  }}
+                  className="px-3 py-1 rounded-full bg-[#cb4926] text-white font-label-sm text-[11px] font-black uppercase diner-tag hover:bg-[#a9310f] transition-all flex items-center gap-1 shadow-sm cursor-pointer"
+                >
+                  <span className="material-symbols-outlined text-xs">qr_code_2</span>
+                  <span>View QR</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleCopyLink();
+                  }}
+                  className="px-3 py-1 rounded-full bg-white text-[#231916] font-label-sm text-[11px] font-black uppercase diner-tag hover:bg-[#ffdea7] transition-all flex items-center gap-1 border border-[#231916] shadow-sm cursor-pointer"
+                >
+                  <span className="material-symbols-outlined text-xs">
+                    {copiedLink ? 'check' : 'content_copy'}
+                  </span>
+                  <span>{copiedLink ? 'Copied!' : 'Copy Link'}</span>
+                </button>
+              </div>
+            </div>
 
             {/* Quick Dish Recommendation Spotlight */}
             <div className="rounded-xl bg-secondary-fixed/50 p-space-md diner-border flex items-center gap-space-sm">
@@ -820,72 +948,261 @@ export default function GroupOrder() {
         </div>
       </div>
 
-      {/* QR Code Pop-up Modal */}
+      {/* Toast notification */}
+      {toastMessage && (
+        <div className="fixed bottom-6 right-6 z-50 bg-[#231916] text-[#fed388] px-4 py-2.5 rounded-xl diner-tag font-label-md text-xs font-bold shadow-2xl flex items-center gap-2 border-2 border-[#fed388] animate-in slide-in-from-bottom duration-200">
+          <span className="material-symbols-outlined text-sm text-[#ffdea7]">check_circle</span>
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
+      {/* QR Code & Coworker Invite Pop-up Modal */}
       {showQrModal && (
-        <div className="fixed inset-0 z-50 bg-on-surface/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-surface-container-lowest max-w-sm w-full rounded-2xl p-space-lg diner-border shadow-2xl relative text-center">
-            <button
-              className="absolute top-3 right-3 w-8 h-8 rounded-full bg-surface-container-high diner-tag flex items-center justify-center hover:bg-error hover:text-on-error transition-colors"
-              type="button"
-              onClick={() => setShowQrModal(false)}
-            >
-              <span className="material-symbols-outlined text-base">close</span>
-            </button>
-            <div className="w-16 h-16 rounded-full bg-secondary-fixed diner-tag mx-auto mb-3 flex items-center justify-center">
-              <span className="material-symbols-outlined text-3xl text-primary">qr_code_scanner</span>
-            </div>
-            <h3 className="font-headline-md text-headline-md uppercase text-on-surface mb-1">
-              Scan To Join Table
-            </h3>
-            <p className="font-body-sm text-xs text-on-surface-variant mb-4">
-              Anyone with this code can add items directly to Sally's Friday Diner Feast.
-            </p>
-            {/* Vintage styled QR frame */}
-            <div className="p-4 bg-surface rounded-xl diner-border inline-block mb-4">
-              <svg className="w-40 h-40 text-on-surface" fill="currentColor" viewBox="0 0 100 100">
-                <rect fill="currentColor" height="30" rx="4" width="30" x="0" y="0"></rect>
-                <rect fill="#fff8f6" height="20" rx="2" width="20" x="5" y="5"></rect>
-                <rect fill="currentColor" height="10" width="10" x="10" y="10"></rect>
-                <rect fill="currentColor" height="30" rx="4" width="30" x="70" y="0"></rect>
-                <rect fill="#fff8f6" height="20" rx="2" width="20" x="75" y="5"></rect>
-                <rect fill="currentColor" height="10" width="10" x="80" y="10"></rect>
-                <rect fill="currentColor" height="30" rx="4" width="30" x="0" y="70"></rect>
-                <rect fill="#fff8f6" height="20" rx="2" width="20" x="5" y="75"></rect>
-                <rect fill="currentColor" height="10" width="10" x="10" y="80"></rect>
-                <rect fill="currentColor" height="8" width="8" x="36" y="8"></rect>
-                <rect fill="currentColor" height="6" width="12" x="48" y="12"></rect>
-                <rect fill="#cb4926" height="24" rx="3" width="24" x="38" y="38"></rect>
-                <circle cx="50" cy="50" fill="#fff8f6" r="5"></circle>
-                <rect fill="currentColor" height="8" width="14" x="12" y="44"></rect>
-                <rect fill="currentColor" height="8" width="18" x="72" y="44"></rect>
-                <rect fill="currentColor" height="16" width="12" x="42" y="72"></rect>
-                <rect fill="currentColor" height="15" width="25" x="65" y="75"></rect>
-              </svg>
-            </div>
-            <div className="bg-surface-container p-2.5 rounded-lg diner-tag flex items-center justify-between text-left mb-4">
-              <div>
-                <span className="text-[10px] uppercase font-bold text-on-surface-variant font-label-sm block">
-                  Direct Room Link
+        <div className="fixed inset-0 z-50 bg-black/65 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-[#fff8f6] max-w-lg w-full rounded-2xl diner-border-thick shadow-2xl relative overflow-hidden flex flex-col max-h-[92vh] animate-in zoom-in-95 duration-200">
+            {/* Scalloped Header */}
+            <div className="bg-[#ffdea7] p-3.5 px-5 diner-border-thick border-x-0 border-t-0 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-[#cb4926] text-2xl font-bold">
+                  group_add
                 </span>
-                <span className="text-xs font-mono text-primary font-bold">
-                  chowchow.diner/room/7492
-                </span>
+                <div>
+                  <h3 className="font-headline-sm text-sm uppercase font-black text-[#231916] leading-none">
+                    Invite Coworkers To Table
+                  </h3>
+                  <span className="font-label-sm text-[10px] text-[#59413b] font-bold">
+                    Room #{roomCode} • Collaborative Feast Tray
+                  </span>
+                </div>
               </div>
               <button
-                className="px-2 py-1 rounded bg-surface-container-highest text-on-surface font-label-sm text-xs font-bold diner-tag"
+                className="w-8 h-8 rounded-full bg-white/80 hover:bg-white text-[#231916] border-2 border-[#231916] flex items-center justify-center transition-colors cursor-pointer shadow-sm active:translate-x-0.5 active:translate-y-0.5"
                 type="button"
-                onClick={handleCopyLink}
+                onClick={() => setShowQrModal(false)}
+                title="Close"
               >
-                {copiedLink ? 'Copied!' : 'Copy'}
+                <span className="material-symbols-outlined text-base font-bold">close</span>
               </button>
             </div>
-            <button
-              className="w-full py-2.5 rounded-lg bg-on-surface text-surface-bright font-label-sm uppercase font-bold diner-tag hover:opacity-90"
-              type="button"
-              onClick={() => setShowQrModal(false)}
-            >
-              Done
-            </button>
+
+            {/* Mode Switcher Tabs */}
+            <div className="grid grid-cols-3 bg-[#f2dfd7] p-1.5 border-b-2 border-[#231916] gap-1.5">
+              <button
+                type="button"
+                onClick={() => setInviteModalTab('qr')}
+                className={`py-2 px-2 rounded-lg font-label-md text-xs font-black uppercase flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                  inviteModalTab === 'qr'
+                    ? 'bg-[#cb4926] text-white shadow-[2px_2px_0px_#231916]'
+                    : 'bg-transparent text-[#231916] hover:bg-[#ffdea7]'
+                }`}
+              >
+                <span className="material-symbols-outlined text-sm">qr_code_2</span>
+                <span>Scan QR</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setInviteModalTab('link')}
+                className={`py-2 px-2 rounded-lg font-label-md text-xs font-black uppercase flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                  inviteModalTab === 'link'
+                    ? 'bg-[#cb4926] text-white shadow-[2px_2px_0px_#231916]'
+                    : 'bg-transparent text-[#231916] hover:bg-[#ffdea7]'
+                }`}
+              >
+                <span className="material-symbols-outlined text-sm">link</span>
+                <span>Direct Link</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setInviteModalTab('direct')}
+                className={`py-2 px-2 rounded-lg font-label-md text-xs font-black uppercase flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                  inviteModalTab === 'direct'
+                    ? 'bg-[#cb4926] text-white shadow-[2px_2px_0px_#231916]'
+                    : 'bg-transparent text-[#231916] hover:bg-[#ffdea7]'
+                }`}
+              >
+                <span className="material-symbols-outlined text-sm">mail</span>
+                <span>Send Invite</span>
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-5 overflow-y-auto space-y-4">
+              {inviteModalTab === 'qr' && (
+                <div className="flex flex-col items-center text-center">
+                  <span className="px-2.5 py-0.5 rounded-full bg-[#e8d5be] text-[#231916] font-label-sm text-[10px] uppercase font-bold diner-tag mb-2">
+                    Scannable with Any Camera Phone
+                  </span>
+                  <p className="font-body-sm text-xs text-[#59413b] max-w-xs mb-3">
+                    Hold your phone camera or QR scanner up to this code to join Booth #{roomCode} instantly.
+                  </p>
+
+                  {/* Real Scannable QR Code Frame */}
+                  <div className="p-3 bg-white rounded-2xl diner-border-thick shadow-md inline-block relative group">
+                    {qrDataUrl ? (
+                      <img
+                        src={qrDataUrl}
+                        alt={`QR Code for room ${roomCode}`}
+                        className="w-52 h-52 object-contain rounded-lg"
+                      />
+                    ) : (
+                      <div className="w-52 h-52 flex flex-col items-center justify-center bg-surface-container rounded-lg">
+                        <span className="material-symbols-outlined text-4xl text-primary animate-spin mb-2">
+                          sync
+                        </span>
+                        <span className="text-xs font-bold text-[#59413b]">Generating QR Code...</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-2 mt-4 w-full">
+                    <button
+                      type="button"
+                      onClick={handleCopyLink}
+                      className="flex-1 py-2.5 px-3 rounded-xl bg-[#cb4926] text-white font-label-md text-xs font-black uppercase diner-tag hover:bg-[#a9310f] transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-md active:translate-x-0.5 active:translate-y-0.5"
+                    >
+                      <span className="material-symbols-outlined text-base">
+                        {copiedLink ? 'check' : 'content_copy'}
+                      </span>
+                      <span>{copiedLink ? 'Link Copied! ✓' : 'Copy Table Link'}</span>
+                    </button>
+                    {qrDataUrl && (
+                      <a
+                        href={qrDataUrl}
+                        download={`chowchow-table-${roomCode}-qr.png`}
+                        className="py-2.5 px-3 rounded-xl bg-[#ffdea7] text-[#231916] font-label-md text-xs font-black uppercase diner-tag hover:bg-[#fed388] transition-all flex items-center justify-center gap-1.5 cursor-pointer border border-[#231916] shadow-sm active:translate-x-0.5 active:translate-y-0.5"
+                        title="Download QR image to share in Slack or print"
+                      >
+                        <span className="material-symbols-outlined text-base">download</span>
+                        <span>Save QR</span>
+                      </a>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {inviteModalTab === 'link' && (
+                <div className="space-y-4 text-left">
+                  <div>
+                    <label className="text-xs font-black uppercase text-[#231916] flex items-center gap-1 mb-1.5">
+                      <span className="material-symbols-outlined text-sm text-[#cb4926]">link</span>
+                      Live Table URL:
+                    </label>
+                    <div className="p-3 bg-white rounded-xl border-2 border-[#231916] shadow-sm flex items-center justify-between gap-2">
+                      <a
+                        href={getInviteUrl()}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-mono text-xs text-[#cb4926] hover:underline font-bold truncate flex items-center gap-1 group"
+                        title="Click to open table in new window"
+                      >
+                        <span className="truncate">{getInviteUrl()}</span>
+                        <span className="material-symbols-outlined text-xs shrink-0 group-hover:translate-x-0.5 transition-transform">
+                          open_in_new
+                        </span>
+                      </a>
+                      <button
+                        type="button"
+                        onClick={handleCopyLink}
+                        className="px-3 py-1.5 rounded-lg bg-[#cb4926] text-white font-label-sm text-xs font-black uppercase diner-tag hover:bg-[#a9310f] transition-all shrink-0 cursor-pointer shadow-sm active:translate-x-0.5 active:translate-y-0.5"
+                      >
+                        {copiedLink ? 'Copied! ✓' : 'Copy'}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Actions: Test link / Open New Tab / Share */}
+                  <div className="grid grid-cols-2 gap-2 pt-2">
+                    <a
+                      href={getInviteUrl()}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="py-2.5 px-3 rounded-xl bg-white text-[#231916] font-label-md text-xs font-black uppercase diner-tag hover:bg-[#ffdea7] transition-all flex items-center justify-center gap-1.5 cursor-pointer border border-[#231916] shadow-sm text-center"
+                    >
+                      <span className="material-symbols-outlined text-base text-[#cb4926]">open_in_new</span>
+                      <span>Test / Open Link</span>
+                    </a>
+                    <button
+                      type="button"
+                      onClick={handleShare}
+                      className="py-2.5 px-3 rounded-xl bg-[#ffdea7] text-[#231916] font-label-md text-xs font-black uppercase diner-tag hover:bg-[#fed388] transition-all flex items-center justify-center gap-1.5 cursor-pointer border border-[#231916] shadow-sm"
+                    >
+                      <span className="material-symbols-outlined text-base text-[#cb4926]">share</span>
+                      <span>Share With Apps</span>
+                    </button>
+                  </div>
+
+                  <div className="bg-[#f2dfd7] p-3 rounded-xl diner-tag text-xs text-[#59413b] space-y-1">
+                    <p className="font-bold text-[#231916] flex items-center gap-1">
+                      <span className="material-symbols-outlined text-sm text-[#cb4926]">info</span>
+                      How Coworkers Join:
+                    </p>
+                    <p>
+                      Anyone opening this link hops straight into Booth #{roomCode}. They can browse burgers, shakes, and sides, and their selections appear live on this screen.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {inviteModalTab === 'direct' && (
+                <form onSubmit={handleDirectInvite} className="space-y-3.5 text-left">
+                  {inviteFeedback && (
+                    <div className="p-2.5 rounded-xl bg-[#caecbe] text-[#062105] text-xs font-bold diner-tag flex items-center gap-2 border border-[#062105]/20 animate-in fade-in">
+                      <span className="material-symbols-outlined text-base">check_circle</span>
+                      <span>{inviteFeedback}</span>
+                    </div>
+                  )}
+
+                  <div>
+                    <label className="text-xs font-black uppercase text-[#231916] block mb-1">
+                      Coworker or Pal's Name:
+                    </label>
+                    <input
+                      type="text"
+                      value={coworkerName}
+                      onChange={(e) => setCoworkerName(e.target.value)}
+                      placeholder="e.g. Alex, Sam, Dev Team..."
+                      className="w-full text-xs font-bold bg-white text-[#231916] px-3.5 py-2.5 rounded-xl border-2 border-[#231916]/40 focus:outline-none focus:border-[#cb4926]"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-black uppercase text-[#231916] block mb-1">
+                      Email Address (Optional):
+                    </label>
+                    <input
+                      type="email"
+                      value={coworkerEmail}
+                      onChange={(e) => setCoworkerEmail(e.target.value)}
+                      placeholder="e.g. alex@company.com"
+                      className="w-full text-xs font-bold bg-white text-[#231916] px-3.5 py-2.5 rounded-xl border-2 border-[#231916]/40 focus:outline-none focus:border-[#cb4926]"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full py-3 px-4 rounded-xl bg-[#cb4926] text-white font-label-md text-xs font-black uppercase diner-tag hover:bg-[#a9310f] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md active:translate-x-0.5 active:translate-y-0.5"
+                  >
+                    <span className="material-symbols-outlined text-base">send</span>
+                    <span>Dispatch Table Invite</span>
+                  </button>
+                </form>
+              )}
+            </div>
+
+            {/* Modal Bottom Footer */}
+            <div className="bg-[#f7e4de] p-3 px-5 diner-border-thick border-x-0 border-b-0 flex items-center justify-between">
+              <span className="text-[11px] font-bold text-[#59413b]">
+                Booth Table: <strong>#{roomCode}</strong> (Max 8 diner guests)
+              </span>
+              <button
+                type="button"
+                onClick={() => setShowQrModal(false)}
+                className="py-1.5 px-4 rounded-lg bg-[#231916] text-white font-label-sm text-xs font-bold diner-tag hover:bg-[#3d2c27] cursor-pointer"
+              >
+                Done
+              </button>
+            </div>
           </div>
         </div>
       )}
