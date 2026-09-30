@@ -307,6 +307,47 @@
   animation: cardScrollPop 0.5s cubic-bezier(0.34, 1.45, 0.64, 1) forwards;
 }
 
+/* Scroll-Triggered Popup Reveal Animations */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(32px) scale(0.96);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Staggered Delay for child cards popping in on scroll */
+.scroll-stagger > *:nth-child(1) { transition-delay: 0.04s; }
+.scroll-stagger > *:nth-child(2) { transition-delay: 0.12s; }
+.scroll-stagger > *:nth-child(3) { transition-delay: 0.20s; }
+.scroll-stagger > *:nth-child(4) { transition-delay: 0.28s; }
+.scroll-stagger > *:nth-child(5) { transition-delay: 0.36s; }
+.scroll-stagger > *:nth-child(6) { transition-delay: 0.44s; }
+
+/* Continuous Scrolling Ticker Marquee */
+@keyframes marqueeScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.anim-marquee-scroll {
+  display: flex;
+  width: max-content;
+  animation: marqueeScroll 28s linear infinite;
+}
+
+.anim-marquee-scroll:hover {
+  animation-play-state: paused;
+}
+
 /* Prefers Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
   .animate-sunburst {

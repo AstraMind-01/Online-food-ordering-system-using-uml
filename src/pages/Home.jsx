@@ -186,6 +186,25 @@ export default function Home() {
     }
   };
 
+  // Scroll reveal observer for popup scrolling animations
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -30px 0px' }
+    );
+
+    const elements = document.querySelectorAll('.scroll-reveal');
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, [menuItems, restaurants]);
+
   return (
     <div className="flex flex-col w-full pb-16">
       {/* Toast Notification */}
@@ -310,9 +329,66 @@ export default function Home() {
       </section>
 
       {/* ========================================================================= */}
+      {/* HIGHWAY SIZZLE INFINITE SCROLLING TICKER MARQUEE                          */}
+      {/* ========================================================================= */}
+      <section className="w-full overflow-hidden bg-[#231916] text-[#fed388] py-3 diner-border mb-16 rounded-xl shadow-lg relative select-none scroll-reveal">
+        <div className="anim-marquee-scroll flex items-center gap-8 whitespace-nowrap font-label-md text-xs font-black uppercase tracking-wider">
+          <span className="flex items-center gap-2">
+            <span className="text-[#cb4926] text-base">★</span>
+            <span>FLAT-TOP ANGUS SMASH BURGERS</span>
+          </span>
+          <span className="flex items-center gap-2">
+            <span className="text-[#fdc65c] text-base">★</span>
+            <span>STEEL-SPUN HAMILTON BEACH FOUNTAIN MALTS</span>
+          </span>
+          <span className="flex items-center gap-2">
+            <span className="text-[#5e7d56] text-base">★</span>
+            <span>COLLABORATIVE BOOTH ORDERING (0 SPLIT HASSLE)</span>
+          </span>
+          <span className="flex items-center gap-2">
+            <span className="text-[#cb4926] text-base">★</span>
+            <span>ROUTE 66 EXPRESS COURIER DROP-OFF</span>
+          </span>
+          <span className="flex items-center gap-2">
+            <span className="text-[#fdc65c] text-base">★</span>
+            <span>HOUSE SPECIAL SECRET 1974 SPICED RELISH</span>
+          </span>
+          <span className="flex items-center gap-2">
+            <span className="text-[#5e7d56] text-base">★</span>
+            <span>CRINKLE FRIES SMOTHERED IN TEXAS CHILI &amp; CHEDDAR</span>
+          </span>
+          {/* Duplicate set for seamless continuous loop */}
+          <span className="flex items-center gap-2">
+            <span className="text-[#cb4926] text-base">★</span>
+            <span>FLAT-TOP ANGUS SMASH BURGERS</span>
+          </span>
+          <span className="flex items-center gap-2">
+            <span className="text-[#fdc65c] text-base">★</span>
+            <span>STEEL-SPUN HAMILTON BEACH FOUNTAIN MALTS</span>
+          </span>
+          <span className="flex items-center gap-2">
+            <span className="text-[#5e7d56] text-base">★</span>
+            <span>COLLABORATIVE BOOTH ORDERING (0 SPLIT HASSLE)</span>
+          </span>
+          <span className="flex items-center gap-2">
+            <span className="text-[#cb4926] text-base">★</span>
+            <span>ROUTE 66 EXPRESS COURIER DROP-OFF</span>
+          </span>
+          <span className="flex items-center gap-2">
+            <span className="text-[#fdc65c] text-base">★</span>
+            <span>HOUSE SPECIAL SECRET 1974 SPICED RELISH</span>
+          </span>
+          <span className="flex items-center gap-2">
+            <span className="text-[#5e7d56] text-base">★</span>
+            <span>CRINKLE FRIES SMOTHERED IN TEXAS CHILI &amp; CHEDDAR</span>
+          </span>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
       {/* SECTION 3: FEATURED MENU ("TODAY'S HOT PICKS")                            */}
       {/* ========================================================================= */}
-      <section className="mb-24 pt-4">
+      <section className="mb-24 pt-4 scroll-reveal">
         <SectionHeading
           tag="TODAY'S HOT PICKS"
           titlePrefix="CHEF SPECIALS FRESH OFF THE"
@@ -333,11 +409,11 @@ export default function Home() {
             <p className="text-xs text-[#59413b] font-medium mt-1">Our chefs are prepping fresh ingredients. Please check back shortly!</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 scroll-stagger">
             {menuItems.map((item) => (
               <div
                 key={item.id}
-                className="bg-[#fff8f6] border-[2.5px] border-[#231916] rounded-2xl p-5 shadow-[4px_4px_0px_#231916] flex flex-col justify-between hover:-translate-y-1 transition-transform group anim-card-pop"
+                className="bg-[#fff8f6] border-[2.5px] border-[#231916] rounded-2xl p-5 shadow-[4px_4px_0px_#231916] flex flex-col justify-between hover:-translate-y-1 transition-transform group anim-card-pop scroll-reveal"
               >
                 {/* Clickable Card Body opening Food Details Modal */}
                 <div
@@ -429,11 +505,11 @@ export default function Home() {
           </div>
         ) : (
           <div className="space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 scroll-stagger">
               {restaurants.map((rest) => (
                 <div
                   key={rest.id}
-                  className="bg-[#fff8f6] border-[2.5px] border-[#231916] rounded-2xl p-5 shadow-[4px_4px_0px_#231916] flex flex-col justify-between hover:-translate-y-1 transition-transform group anim-card-pop"
+                  className="bg-[#fff8f6] border-[2.5px] border-[#231916] rounded-2xl p-5 shadow-[4px_4px_0px_#231916] flex flex-col justify-between hover:-translate-y-1 transition-transform group anim-card-pop scroll-reveal"
                 >
                   <div>
                     {/* Diner Photo */}
@@ -1149,7 +1225,7 @@ export default function Home() {
       )}
 
       {/* Live Scrolling Sizzle Feed Popup Animation */}
-      <ScrollingOrderPopup />
+      <ScrollingOrderPopup onSelectFood={handleOpenDetail} />
 
       {/* Floating Scroll to Top Rocket Button */}
       <ScrollToTopButton />
