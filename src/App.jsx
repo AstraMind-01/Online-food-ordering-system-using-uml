@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
+import RestaurantListing from './pages/RestaurantListing';
+import RestaurantMenuPage from './pages/RestaurantMenuPage';
 import RestaurantMenu from './pages/RestaurantMenu';
 import GroupOrder from './pages/GroupOrder';
 import TrackOrder from './pages/TrackOrder';
@@ -54,9 +56,10 @@ export default function App() {
         <Route element={<CustomerLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/restaurants" element={<RestaurantMenu />} />
-          <Route path="/restaurants-and-menus" element={<RestaurantMenu />} />
-          <Route path="/restaurant-menu" element={<RestaurantMenu />} />
+          <Route path="/restaurants" element={<RestaurantListing />} />
+          <Route path="/restaurants/:id" element={<RestaurantMenuPage />} />
+          <Route path="/restaurants-and-menus" element={<RestaurantListing />} />
+          <Route path="/restaurant-menu" element={<RestaurantListing />} />
           <Route path="/group-ordering" element={<GroupOrder />} />
           <Route path="/group-order" element={<GroupOrder />} />
           <Route path="/track-order" element={<TrackOrder />} />
