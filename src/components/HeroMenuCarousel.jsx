@@ -152,7 +152,7 @@ export const MENU_ITEMS = [
   },
 ];
 
-export default function HeroMenuCarousel() {
+export default function HeroMenuCarousel({ onSelectFood }) {
   const [items, setItems] = useState(MENU_ITEMS);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [prevIndex, setPrevIndex] = useState(null);
@@ -317,7 +317,23 @@ export default function HeroMenuCarousel() {
       )}
 
       {/* Main Card Frame */}
-      <div className="w-full max-w-md bg-surface-container rounded-2xl diner-border p-space-md transform -rotate-1 hover:rotate-0 transition-transform duration-300">
+      <div
+        className={`w-full max-w-md bg-surface-container rounded-2xl diner-border p-space-md transform -rotate-1 hover:rotate-0 transition-transform duration-300 ${onSelectFood ? 'cursor-pointer group/hero' : ''}`}
+        onClick={() => {
+          if (onSelectFood) {
+            onSelectFood({
+              id: item.id,
+              name: item.name,
+              description: item.description,
+              price: typeof item.price === 'string' ? parseFloat(item.price.replace(/[^\d.]/g, '')) || 12.5 : item.price,
+              imageUrl: item.photo || item.imageUrl,
+              badgeText: item.ribbon,
+              prepTimeMins: parseInt(item.prep) || 8,
+            });
+          }
+        }}
+        title={onSelectFood ? "Click to view full recipe details, ingredients & customization" : undefined}
+      >
         <div className="relative overflow-hidden rounded-xl diner-tag mb-space-sm bg-surface-container-high">
           <img
             className={`w-full h-64 object-cover ${isIncoming ? 'anim-photo' : ''}`}

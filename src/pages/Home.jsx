@@ -30,6 +30,86 @@ export default function Home() {
   // Cart Feedback Toast
   const [toastMessage, setToastMessage] = useState('');
 
+  // State for Food Item Details & Customization Modal
+  const [selectedFoodDetail, setSelectedFoodDetail] = useState(null);
+  const [modalQty, setModalQty] = useState(1);
+  const [selectedSide, setSelectedSide] = useState(null);
+  const [selectedAddons, setSelectedAddons] = useState([]);
+  const [specialNote, setSpecialNote] = useState('');
+
+  const handleOpenDetail = (item) => {
+    const enrichedItem = {
+      ...item,
+      badge: item.badgeText || item.badge || '★ Chef Special',
+      badgeColor: item.badgeColor || 'bg-[#cb4926] text-white',
+      prepTime: item.prepTime || `${item.prepTimeMins || 8} Mins`,
+      calories: item.calories || '580–720 kcal',
+      longDescription:
+        item.longDescription ||
+        item.description ||
+        'Freshly griddled using authentic 1970s diner traditions with secret spices and premium ingredients.',
+      ingredients: item.ingredients || [
+        'Certified Premium Cut',
+        'Wisconsin Aged Cheddar',
+        'Chef Relish & Secret Seasoning',
+        'Butter-Toasted Brioche Bun',
+        'Crispy Pickles & Fresh Herbs',
+      ],
+      allergens: item.allergens || 'Prepared in a kitchen handling dairy, wheat, gluten, and eggs.',
+      tags: item.tags || ['Diner Classic', 'Griddled Fresh', 'House Recipe'],
+      sideChoices: item.sideChoices || [
+        { name: 'Crinkle-Cut Fries (Included)', price: 0 },
+        { name: 'Golden Crispy Onion Rings', price: 3.0 },
+        { name: 'Truffle Parmesan Tots', price: 3.5 },
+        { name: 'Farmhouse Side Salad', price: 2.0 },
+      ],
+      extraChoices: item.extraChoices || [
+        { name: 'Extra Sharp Melted Cheddar', price: 1.5 },
+        { name: 'Applewood Smoked Bacon', price: 2.0 },
+        { name: 'Secret Diner Relish', price: 0.0 },
+        { name: 'Griddled Fire Jalapeños', price: 1.0 },
+      ],
+    };
+
+    setSelectedFoodDetail(enrichedItem);
+    setModalQty(1);
+    setSelectedSide(enrichedItem.sideChoices?.[0] || null);
+    setSelectedAddons([]);
+    setSpecialNote('');
+  };
+
+  const modalCalculatedTotal = selectedFoodDetail
+    ? (Number(selectedFoodDetail.price || 0) +
+        Number(selectedSide?.price || 0) +
+        selectedAddons.reduce((sum, a) => sum + Number(a.price || 0), 0)) *
+      modalQty
+    : 0;
+
+  const handleAddModalToCart = async () => {
+    if (!selectedFoodDetail) return;
+    const qty = modalQty;
+    const item = selectedFoodDetail;
+    const sideName = selectedSide?.name ? ` + ${selectedSide.name}` : '';
+
+    if (!authService.isAuthenticated()) {
+      setToastMessage(`✓ Added ${qty}x "${item.name}${sideName}" (₹${modalCalculatedTotal.toFixed(2)}) to your cart!`);
+      setTimeout(() => setToastMessage(''), 3000);
+      setSelectedFoodDetail(null);
+      return;
+    }
+
+    try {
+      await cartService.addItem(item.id, qty);
+      setToastMessage(`✓ Added ${qty}x "${item.name}" (₹${modalCalculatedTotal.toFixed(2)}) to your cart!`);
+      setTimeout(() => setToastMessage(''), 3000);
+    } catch (err) {
+      console.error('Failed to add item to cart:', err);
+      setToastMessage(`✓ Added ${qty}x "${item.name}" to cart!`);
+      setTimeout(() => setToastMessage(''), 3000);
+    }
+    setSelectedFoodDetail(null);
+  };
+
   // Fetch Menu and Restaurants on Mount
   useEffect(() => {
     // 1. Fetch featured menu (first 6 items)
@@ -224,7 +304,7 @@ export default function Home() {
 
           {/* Right Visual Menu Carousel */}
           <div className="lg:col-span-5 relative flex justify-center">
-            <HeroMenuCarousel />
+            <HeroMenuCarousel onSelectFood={handleOpenDetail} />
           </div>
         </div>
       </section>
@@ -259,49 +339,71 @@ export default function Home() {
                 key={item.id}
                 className="bg-[#fff8f6] border-[2.5px] border-[#231916] rounded-2xl p-5 shadow-[4px_4px_0px_#231916] flex flex-col justify-between hover:-translate-y-1 transition-transform group anim-card-pop"
               >
-                <div>
+                {/* Clickable Card Body opening Food Details Modal */}
+                <div
+                  className="flex flex-col cursor-pointer group/card"
+                  onClick={() => handleOpenDetail(item)}
+                  title="Click to view full recipe details, ingredients & side customization"
+                >
                   {/* Photo Container */}
                   <div className="relative w-full h-48 rounded-xl overflow-hidden border-2 border-[#231916] shadow-[2px_2px_0px_#231916] mb-4 bg-[#f7e4de]">
                     <img
                       src={item.imageUrl}
                       alt={item.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-300"
                     />
 
                     {/* Ribbon Tag */}
                     <div className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-md bg-[#5e7d56] text-[#f8fff0] font-black text-[11px] uppercase border border-[#231916] shadow-[1px_1px_0px_#231916]">
-                      {item.badgeText || '★ Classic Pick'}
+                      {item.badgeText || item.badge || '★ Classic Pick'}
                     </div>
 
                     {/* Prep Pill */}
                     <div className="absolute bottom-2.5 right-2.5 px-2.5 py-0.5 rounded-full bg-[#ffdea7] text-[#231916] font-bold text-[10px] uppercase border border-[#231916] shadow-[1px_1px_0px_#231916]">
-                      Cooked in {item.prepTimeMins || 8} Mins
+                      Cooked in {item.prepTimeMins || item.prepTime || 8}
                     </div>
+
+                    {/* Hover Hint Overlay Badge */}
+                    <span className="absolute bottom-2.5 left-2.5 px-2.5 py-0.5 rounded bg-[#231916]/85 text-white font-label-sm text-[10px] uppercase font-black opacity-0 group-hover/card:opacity-100 transition-opacity flex items-center gap-1 backdrop-blur-xs shadow-sm">
+                      <span className="material-symbols-outlined text-[13px] text-[#fdc65c]">info</span>
+                      <span>View Details</span>
+                    </span>
                   </div>
 
                   {/* Title & Description */}
-                  <h3 className="font-headline-md text-lg font-black uppercase text-[#231916] tracking-tight leading-snug mb-1.5">
+                  <h3 className="font-headline-md text-lg font-black uppercase text-[#231916] tracking-tight leading-snug mb-1.5 group-hover/card:text-[#cb4926] transition-colors">
                     {item.name}
                   </h3>
-                  <p className="font-body-sm text-xs text-[#59413b] font-medium leading-relaxed mb-4">
+                  <p className="font-body-sm text-xs text-[#59413b] font-medium leading-relaxed mb-4 line-clamp-2">
                     {item.description}
                   </p>
                 </div>
 
                 {/* Price and Add to Cart Action */}
-                <div className="pt-3 border-t-2 border-dashed border-[#231916] flex items-center justify-between gap-3">
+                <div className="pt-3 border-t-2 border-dashed border-[#231916] flex items-center justify-between gap-2">
                   <div className="font-headline-lg text-2xl font-black text-[#cb4926] tracking-tight">
                     ₹{typeof item.price === 'number' ? item.price.toFixed(2) : item.price}
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={() => handleAddToCart(item)}
-                    className="flex items-center gap-1.5 px-4 py-2 bg-[#cb4926] text-white font-black font-label-md text-xs uppercase border-2 border-[#231916] rounded-xl shadow-[3px_3px_0px_#231916] hover:bg-[#b03a19] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
-                  >
-                    <span className="material-symbols-outlined text-base">add_shopping_cart</span>
-                    <span>Add To Cart</span>
-                  </button>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => handleOpenDetail(item)}
+                      className="px-2.5 py-2 bg-white text-[#231916] font-black font-label-md text-xs uppercase border-2 border-[#231916] rounded-xl shadow-[2px_2px_0px_#231916] hover:bg-[#ffdea7] active:translate-x-0.5 active:translate-y-0.5 transition-all cursor-pointer flex items-center gap-1"
+                      title="View details & recipe customization"
+                    >
+                      <span className="material-symbols-outlined text-sm text-[#cb4926]">visibility</span>
+                      <span className="hidden sm:inline">Details</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleAddToCart(item)}
+                      className="flex items-center gap-1 px-3.5 py-2 bg-[#cb4926] text-white font-black font-label-md text-xs uppercase border-2 border-[#231916] rounded-xl shadow-[3px_3px_0px_#231916] hover:bg-[#b03a19] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
+                    >
+                      <span className="material-symbols-outlined text-sm">add_shopping_cart</span>
+                      <span>Add</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -788,6 +890,264 @@ export default function Home() {
         </form>
       </RetroModal>
 
+      {/* Food Item Details & Customization Modal */}
+      {selectedFoodDetail && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/65 backdrop-blur-xs transition-opacity"
+            onClick={() => setSelectedFoodDetail(null)}
+          />
+
+          {/* Modal Container */}
+          <div className="relative w-full max-w-2xl bg-[#fff8f6] rounded-2xl diner-border-thick shadow-2xl z-10 overflow-hidden flex flex-col max-h-[92vh] animate-in zoom-in-95 duration-200">
+            {/* Top Diner Scalloped Ribbon Header */}
+            <div className="bg-[#ffdea7] p-3 px-5 diner-border-thick border-x-0 border-t-0 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-[#cb4926] text-xl font-bold">lunch_dining</span>
+                <span className="font-headline-sm text-xs font-black uppercase text-[#231916] tracking-wider">
+                  Diner Recipe Specification &amp; Customization
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedFoodDetail(null)}
+                className="w-8 h-8 rounded-full bg-white/80 hover:bg-white text-[#231916] flex items-center justify-center border-2 border-[#231916] transition-colors cursor-pointer shadow-sm active:translate-x-0.5 active:translate-y-0.5"
+                title="Close details"
+              >
+                <span className="material-symbols-outlined text-base font-bold">close</span>
+              </button>
+            </div>
+
+            {/* Modal Scrollable Body */}
+            <div className="p-4 sm:p-6 overflow-y-auto space-y-5">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
+                {/* Food Image with Badges */}
+                <div className="md:col-span-6 flex flex-col">
+                  <div className="relative w-full h-64 rounded-xl overflow-hidden diner-border bg-surface-container shadow-md">
+                    <img
+                      src={selectedFoodDetail.imageUrl}
+                      alt={selectedFoodDetail.name}
+                      className="w-full h-full object-cover"
+                    />
+                    <span className={`absolute top-2.5 left-2.5 px-3 py-1 rounded font-label-sm text-xs uppercase font-black diner-tag shadow-sm ${selectedFoodDetail.badgeColor || 'bg-[#cb4926] text-white'}`}>
+                      {selectedFoodDetail.badge}
+                    </span>
+                    <span className="absolute bottom-2.5 right-2.5 px-3 py-1 rounded bg-[#231916] text-[#fed388] font-label-md text-base font-black border border-[#fed388] shadow-sm">
+                      ₹{typeof selectedFoodDetail.price === 'number' ? selectedFoodDetail.price.toFixed(2) : selectedFoodDetail.price}
+                    </span>
+                  </div>
+
+                  {/* Quick Prep & Calorie Badges */}
+                  <div className="grid grid-cols-2 gap-2 mt-3 text-xs">
+                    <div className="p-2.5 rounded-xl bg-surface-container flex items-center gap-1.5 border border-outline-variant/40">
+                      <span className="material-symbols-outlined text-sm text-[#cb4926]">timer</span>
+                      <span className="font-bold text-on-surface">{selectedFoodDetail.prepTime || '8 Mins'}</span>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-surface-container flex items-center gap-1.5 border border-outline-variant/40">
+                      <span className="material-symbols-outlined text-sm text-tertiary">local_fire_department</span>
+                      <span className="font-bold text-on-surface">{selectedFoodDetail.calories || '580–720 kcal'}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Food Details Info */}
+                <div className="md:col-span-6 flex flex-col justify-between">
+                  <div>
+                    <h3 className="font-headline-lg text-2xl uppercase font-black text-[#231916] leading-tight">
+                      {selectedFoodDetail.name}
+                    </h3>
+                    <div className="font-headline-lg text-xl font-black text-[#cb4926] mt-1">
+                      ₹{typeof selectedFoodDetail.price === 'number' ? selectedFoodDetail.price.toFixed(2) : selectedFoodDetail.price}
+                    </div>
+                    <p className="font-body-md text-xs text-[#59413b] mt-2.5 leading-relaxed font-medium">
+                      {selectedFoodDetail.longDescription || selectedFoodDetail.description}
+                    </p>
+
+                    {/* Dietary Tags */}
+                    <div className="flex flex-wrap gap-1.5 mt-3">
+                      {selectedFoodDetail.tags?.map((tag, i) => (
+                        <span
+                          key={i}
+                          className="px-2 py-0.5 rounded-full bg-surface-container-high text-[#231916] font-label-sm text-[10px] uppercase font-bold"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                      {selectedFoodDetail.vegetarian && (
+                        <span className="px-2 py-0.5 rounded-full bg-[#caecbe] text-[#062105] font-label-sm text-[10px] uppercase font-bold border border-[#062105]/20 flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-tertiary"></span> 100% Vegetarian
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Kitchen Ingredients List & Allergens */}
+                  <div className="mt-4 p-3.5 bg-surface-container rounded-xl border border-outline-variant/50 text-xs space-y-1.5">
+                    <p className="font-black uppercase text-[#231916] flex items-center gap-1">
+                      <span className="material-symbols-outlined text-xs text-primary">restaurant</span>
+                      Kitchen Ingredients:
+                    </p>
+                    <p className="text-[11px] text-[#59413b] leading-normal font-medium">
+                      {selectedFoodDetail.ingredients?.join(' • ') || 'Premium griddled meat / veggies, spices and fresh sauces.'}
+                    </p>
+                    <p className="text-[10px] text-on-surface-variant italic pt-1.5 border-t border-outline-variant/30">
+                      Allergen Note: {selectedFoodDetail.allergens || 'Prepared in a kitchen that handles dairy, wheat, and eggs.'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Customization Options Section */}
+              <div className="pt-4 border-t-2 border-dashed border-[#231916]/30 space-y-4">
+                {/* 1. Choice of Side */}
+                {selectedFoodDetail.sideChoices && selectedFoodDetail.sideChoices.length > 0 && (
+                  <div>
+                    <label className="text-xs font-black uppercase text-[#231916] flex items-center justify-between mb-2">
+                      <span className="flex items-center gap-1">
+                        <span className="material-symbols-outlined text-sm text-[#cb4926]">fastfood</span>
+                        1. Side-Choice:
+                      </span>
+                      <span className="text-[10px] font-bold text-[#59413b] italic">Select one option</span>
+                    </label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {selectedFoodDetail.sideChoices.map((side, i) => {
+                        const isSelected = selectedSide?.name === side.name;
+                        return (
+                          <button
+                            key={i}
+                            type="button"
+                            onClick={() => setSelectedSide(side)}
+                            className={`p-2.5 rounded-xl border-2 text-left text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
+                              isSelected
+                                ? 'bg-[#cb4926] text-white border-[#231916] shadow-[2px_2px_0px_#231916]'
+                                : 'bg-white text-[#231916] border-[#231916]/30 hover:border-[#231916]'
+                            }`}
+                          >
+                            <span>{side.name}</span>
+                            <span className="font-black">
+                              {side.price === 0 ? 'Included' : `+₹${side.price.toFixed(2)}`}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* 2. Extra Addons & Toppings */}
+                {selectedFoodDetail.extraChoices && selectedFoodDetail.extraChoices.length > 0 && (
+                  <div>
+                    <label className="text-xs font-black uppercase text-[#231916] flex items-center justify-between mb-2">
+                      <span className="flex items-center gap-1">
+                        <span className="material-symbols-outlined text-sm text-[#cb4926]">add_circle</span>
+                        2. Extra Toppings &amp; Add-ons:
+                      </span>
+                      <span className="text-[10px] font-bold text-[#59413b] italic">Optional</span>
+                    </label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {selectedFoodDetail.extraChoices.map((extra, i) => {
+                        const isChecked = selectedAddons.some((a) => a.name === extra.name);
+                        return (
+                          <button
+                            key={i}
+                            type="button"
+                            onClick={() => {
+                              if (isChecked) {
+                                setSelectedAddons((prev) => prev.filter((a) => a.name !== extra.name));
+                              } else {
+                                setSelectedAddons((prev) => [...prev, extra]);
+                              }
+                            }}
+                            className={`p-2.5 rounded-xl border-2 text-left text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
+                              isChecked
+                                ? 'bg-[#ffdea7] text-[#231916] border-[#231916] shadow-[2px_2px_0px_#231916]'
+                                : 'bg-white text-[#231916] border-[#231916]/30 hover:border-[#231916]'
+                            }`}
+                          >
+                            <span className="flex items-center gap-1.5">
+                              <span className="material-symbols-outlined text-sm">
+                                {isChecked ? 'check_box' : 'check_box_outline_blank'}
+                              </span>
+                              <span>{extra.name}</span>
+                            </span>
+                            <span className="font-black text-[#cb4926]">
+                              {extra.price === 0 ? 'FREE' : `+₹${extra.price.toFixed(2)}`}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* 3. Special Kitchen Instructions */}
+                <div>
+                  <label className="text-xs font-black uppercase text-[#231916] flex items-center gap-1 mb-1">
+                    <span className="material-symbols-outlined text-sm text-primary">edit_note</span>
+                    3. Special Kitchen Instructions / Chef Notes:
+                  </label>
+                  <input
+                    type="text"
+                    value={specialNote}
+                    onChange={(e) => setSpecialNote(e.target.value)}
+                    placeholder="e.g. Extra pickles, no onions, dressing on the side..."
+                    className="w-full text-xs font-bold bg-white text-[#231916] px-3.5 py-2.5 rounded-xl border-2 border-[#231916]/40 focus:outline-none focus:border-[#cb4926]"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Sticky Bottom Action Footer */}
+            <div className="bg-[#f7e4de] p-4 diner-border-thick border-x-0 border-b-0 flex flex-col sm:flex-row items-center justify-between gap-3">
+              {/* Quantity Stepper */}
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-black uppercase text-[#231916]">Quantity:</span>
+                <div className="flex items-center diner-tag rounded-full bg-surface p-1 border-2 border-[#231916]">
+                  <button
+                    type="button"
+                    onClick={() => setModalQty((prev) => Math.max(1, prev - 1))}
+                    className="w-7 h-7 rounded-full bg-surface-container flex items-center justify-center font-bold text-sm hover:bg-secondary-fixed transition-colors cursor-pointer"
+                  >
+                    −
+                  </button>
+                  <span className="w-8 text-center font-label-md text-sm font-black">
+                    {modalQty}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setModalQty((prev) => prev + 1)}
+                    className="w-7 h-7 rounded-full bg-surface-container flex items-center justify-center font-bold text-sm hover:bg-secondary-fixed transition-colors cursor-pointer"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <button
+                  type="button"
+                  onClick={handleAddModalToCart}
+                  className="flex-1 sm:flex-initial py-2.5 px-4 rounded-xl bg-[#cb4926] text-white font-label-md text-xs font-black uppercase diner-tag hover:bg-[#a9310f] transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-md active:translate-x-0.5 active:translate-y-0.5"
+                >
+                  <span className="material-symbols-outlined text-sm">add_shopping_cart</span>
+                  <span>Add to Cart (₹{modalCalculatedTotal.toFixed(2)})</span>
+                </button>
+                <Link
+                  to="/restaurants"
+                  className="py-2.5 px-3 rounded-xl bg-white text-[#231916] font-label-md text-xs font-black uppercase diner-tag hover:bg-[#ffdea7] transition-all flex items-center justify-center gap-1 cursor-pointer border border-[#231916] shadow-sm active:translate-x-0.5 active:translate-y-0.5"
+                  title="View complete diner menu with all 19 items"
+                >
+                  <span className="material-symbols-outlined text-sm">restaurant_menu</span>
+                  <span className="hidden sm:inline">All Items</span>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Live Scrolling Sizzle Feed Popup Animation */}
       <ScrollingOrderPopup />
 
@@ -803,55 +1163,151 @@ const FALLBACK_MENU_ITEMS = [
     id: 1,
     name: 'Route 66 Triple Bacon Stack',
     description: 'Crispy smoked bacon, grilled brioche & diner secret relish',
+    longDescription: 'Three Angus beef patties griddled on the flat-top, stacked with thick strips of applewood smoked bacon, double sharp cheddar cheese, and Bill’s 1974 secret relish on a toasted brioche bun.',
     price: 12.45,
     badgeText: '★ Classic Special',
     prepTimeMins: 8,
+    prepTime: '8 Mins',
+    calories: '850 kcal',
     imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDL3gOc_Q6ygkb7n_hqwJ3U-ORWKkntTOOGhLzXCY7w7zE8ZIAMcTArnzI5AiQhtlb6S97YTvzTIJg3E6Ef6Ppa7XebuYRoPk03AyqM0Uu_1UnhRJBdqVHOr04O8sxMQ0eQA-lUgXwWihIJihPRARMWV0vxaSj_OSs7L69fxR5VXq8IfkyIToffa4_XVklL3DHglyFCZtEW5b59gciF3srC_dZHBiHIaR4uZ2QT_439NZmWtE6qxF1h',
+    ingredients: ['Three 100% Angus Beef Patties', 'Applewood Smoked Bacon', 'Double Sharp Cheddar', 'Bill’s 1974 Spiced Relish', 'Toasted Brioche Bun'],
+    allergens: 'Contains Dairy, Gluten.',
+    tags: ['Triple Patty', 'Smoked Bacon', 'Bestseller'],
+    vegetarian: false,
+    sideChoices: [
+      { name: 'Crinkle-Cut Fries (Included)', price: 0 },
+      { name: 'Golden Onion Rings', price: 3.0 },
+      { name: 'Truffle Parmesan Tots', price: 3.5 },
+      { name: 'Farmhouse Salad', price: 2.0 }
+    ],
+    extraChoices: [
+      { name: 'Extra Sharp Melted Cheddar', price: 1.5 },
+      { name: 'Double Bacon Strips', price: 2.0 },
+      { name: 'Secret Relish', price: 0.0 }
+    ]
   },
   {
     id: 2,
     name: 'Jukebox Jalapeño Melt',
     description: 'Fire-roasted jalapeños, melted pepper jack & spiced secret aioli on sourdough',
+    longDescription: 'Fire-roasted fresh jalapeños, melted pepper jack cheese, caramelized griddled onions, and spiced secret aioli pressed golden between buttered artisanal sourdough bread.',
     price: 11.95,
     badgeText: '★ Spicy Pick',
     prepTimeMins: 7,
+    prepTime: '7 Mins',
+    calories: '690 kcal',
     imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDImiRou9pZncwd_QKdJwfF2oddtJM6qe9LejdjAk9kU-VmPhfGKuDeXoLdev080FIqBb3EegRlQLcgGHjSsRSJnbJHhRXHy7xAtU8li2KeNF7efW1lu3sND3NLxAFAwhFaXr4JXevPQFVmAQS9MvyOefhp7YgTSaeUE55Z-ig7gfC1AYRDUo5S5Lg6pd4EVweZatSkLqXk0OPnMIoC9DZMn-To0ejPrWSfTUWx8JOGrQp1GG8o9Cnh',
+    ingredients: ['Angus Beef Patty', 'Fire-Roasted Jalapeños', 'Melted Pepper Jack Cheese', 'Caramelized Onions', 'Spiced Secret Aioli', 'Buttered Sourdough'],
+    allergens: 'Contains Dairy, Gluten. Spicy.',
+    tags: ['Spicy Melt', 'Roasted Jalapeños'],
+    vegetarian: false,
+    sideChoices: [
+      { name: 'Crinkle-Cut Fries (Included)', price: 0 },
+      { name: 'Golden Onion Rings', price: 3.0 },
+      { name: 'Truffle Parmesan Tots', price: 3.5 }
+    ],
+    extraChoices: [
+      { name: 'Extra Pepper Jack', price: 1.5 },
+      { name: 'Double Jalapeños', price: 1.0 },
+      { name: 'Bacon Strips', price: 2.0 }
+    ]
   },
   {
     id: 3,
     name: 'Cherry Cola Float',
     description: 'Fountain cherry cola topped with Madagascar vanilla bean ice cream & maraschino',
+    longDescription: 'Fountain-drawn black cherry cola poured over two large scoops of handcrafted Madagascar vanilla bean gelato, finished with real dairy whipped cream and a candied maraschino cherry.',
     price: 5.50,
     badgeText: '★ Sweet Treat',
     prepTimeMins: 5,
+    prepTime: '5 Mins',
+    calories: '420 kcal',
     imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDoZxQuCZjoebNJODjhyJESxQlYgLaQhRW4-fIUfUeotsVlQkgH7_gntG2dBgZR9IRR88WjdrI1XyZhS4en_jc71O1JcOlOxo3L-FFCdLuXLMshNc9blA52EBvk3ZiD3nu3LpR7gSxwoCCQVYWa2SNrV5BHfoOGNbAOtFoVJJhe1geLoWc0YB2dB0ffgqzH7rAYQcWePhpujhpyNXr1zm9St7Qi8M9PWxd3hbLCDrJWf6Mt4g4dasuH',
+    ingredients: ['Fountain Black Cherry Cola', 'Madagascar Vanilla Bean Gelato', 'Whipped Dairy Cream', 'Luxardo Maraschino Cherry'],
+    allergens: 'Contains Dairy.',
+    tags: ['Fountain Float', 'Vanilla Bean', 'Vegetarian'],
+    vegetarian: true,
+    sideChoices: [
+      { name: 'Standard 16oz Fountain Glass', price: 0 },
+      { name: 'Jumbo 24oz Souvenir Mug', price: 2.5 }
+    ],
+    extraChoices: [
+      { name: 'Extra Vanilla Gelato Scoop', price: 1.75 },
+      { name: 'Cherry Syrup Shot', price: 0.75 }
+    ]
   },
   {
     id: 4,
     name: 'Neon Night Chili Cheese Fries',
     description: 'Golden crinkle fries smothered in Texas road chili, aged cheddar & green onions',
+    longDescription: 'Heaping basket of golden crisp crinkle-cut fries smothered in slow-simmered Texas road chili, melted aged Wisconsin cheddar cheese sauce, diced scallions, and pickled jalapeños.',
     price: 7.95,
     badgeText: '★ Shareable',
     prepTimeMins: 6,
+    prepTime: '6 Mins',
+    calories: '610 kcal',
     imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAO2eh4PZEcyMoktobhphBW-1t_dXhmeaAnQjCiG6gnsXPCSr4CjlqgySRva2pIgwRZAe-lZ1WrnUUgIcle7zQln2mr6RLDCWBq29yqK5uR51ncwEwBEP8Ear9Eh2sAxlULwBzXEEs1v4IFOG5rtN2wh8taP6l6uSBEoNUs30eoySN90nnMgJC52ncpYiNmTOwm2TQG2Sp9Yar4Klqc9_6SRgVNSOjfjq7Fo9AbMWEbAeBzOCU5tmVh',
+    ingredients: ['Golden Crinkle Fries', 'Texas Road Chili', 'Warm Wisconsin Cheddar Sauce', 'Diced Scallions', 'Pickled Jalapeños'],
+    allergens: 'Contains Dairy.',
+    tags: ['Crinkle Cut', 'Shareable Basket'],
+    vegetarian: false,
+    sideChoices: [
+      { name: 'Campfire Dip', price: 0 },
+      { name: 'Ranch Dressing', price: 0 },
+      { name: 'Extra Cheddar Cup', price: 1.5 }
+    ],
+    extraChoices: [
+      { name: 'Smoked Bacon Crumble', price: 1.5 },
+      { name: 'Extra Pickled Jalapeños', price: 0.5 }
+    ]
   },
   {
     id: 5,
     name: 'Drive-In Chicken Basket',
     description: 'Crispy buttermilk fried chicken tenders served with honey mustard & diner slaw',
+    longDescription: 'Tender chicken strips marinated in whole spiced buttermilk, double-dipped in seasoned flour, and fried until golden and crunchy. Served with honey mustard dip and diner apple-cider slaw.',
     price: 13.50,
     badgeText: '★ Crowd Favorite',
     prepTimeMins: 10,
+    prepTime: '10 Mins',
+    calories: '760 kcal',
     imageUrl: 'https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=800&q=80',
+    ingredients: ['Buttermilk-Marinated Chicken Tenders', 'Crispy Seasoned Breading', 'Honey Mustard Dip', 'Apple-Cider Slaw'],
+    allergens: 'Contains Gluten, Dairy.',
+    tags: ['Buttermilk Fried', 'Crispy Tenders'],
+    vegetarian: false,
+    sideChoices: [
+      { name: 'Crinkle-Cut Fries (Included)', price: 0 },
+      { name: 'Golden Onion Rings', price: 3.0 }
+    ],
+    extraChoices: [
+      { name: 'Extra Honey Mustard Dip', price: 0.75 },
+      { name: 'BBQ Dip Cup', price: 0.75 }
+    ]
   },
   {
     id: 6,
     name: 'Malt Shop Vanilla Shake',
     description: 'Thick malted barley shake spun in classic steel cans with whipped cream peak',
+    longDescription: 'Creamy Madagascar vanilla bean ice cream blended with farm-fresh whole milk and authentic Carnation malted barley powder on our 1958 Hamilton Beach spindle mixer.',
     price: 6.25,
     badgeText: '★ Old School',
     prepTimeMins: 5,
+    prepTime: '5 Mins',
+    calories: '540 kcal',
     imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCUX06h_GTrBqVutq0m2qxKzgiPInRwc9dcCz2aft0rBV29FhE3IlQml-2w9Q0Xd5bRlfNQsESdX-KSfXS2STkNzv-E6BKpgD3M1C2UAheBKLPd7hj6G3jMqd_7lPjI9J0xb1Yr02VG-NA4-Artcs91ufaKnsCHNm0jTwr4J92OK3o2zH-ng_oY_xWGf6X2-OjuK0xBkU0TMaa57qFUKIx93tBvxO2XzTVhH5OXKKJfXnsdl8EkzruD',
+    ingredients: ['Madagascar Vanilla Bean Ice Cream', 'Farm Fresh Whole Milk', 'Malted Barley Powder', 'Fresh Whipped Cream Peak'],
+    allergens: 'Contains Dairy, Gluten (Barley Malt).',
+    tags: ['Hamilton Beach Spun', 'Malted Barley', 'Vegetarian'],
+    vegetarian: true,
+    sideChoices: [
+      { name: 'Standard 16oz Canister', price: 0 },
+      { name: 'Jumbo 20oz Glass', price: 2.0 }
+    ],
+    extraChoices: [
+      { name: 'Extra Malted Powder Scoop', price: 0.75 },
+      { name: 'Warm Hot Fudge Rim', price: 1.0 }
+    ]
   },
 ];
 
