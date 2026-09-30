@@ -78,8 +78,18 @@ export default function Navbar() {
           <NavLink to="/restaurants" className={navLinkClass}>
             Restaurants
           </NavLink>
-
-          {/* Active Portal Links based on User Role */}
+          {!currentUser && (
+            <button
+              type="button"
+              onClick={() => scrollToSection('how-it-works')}
+              className="px-3 py-1.5 rounded-full text-xs uppercase font-bold text-[#59413b] hover:text-[#231916] hover:bg-[#fff1ec] transition-colors cursor-pointer"
+            >
+              How It Works
+            </button>
+          )}
+          <NavLink to="/group-ordering" className={navLinkClass}>
+            Group Order
+          </NavLink>
           {currentUser && (currentUser.role === 'CUSTOMER' || !currentUser.role) && (
             <NavLink to="/diner-dashboard" className={navLinkClass}>
               Customer Portal
@@ -100,17 +110,6 @@ export default function Navbar() {
               Admin Portal
             </NavLink>
           )}
-
-          <button
-            type="button"
-            onClick={() => scrollToSection('how-it-works')}
-            className="px-3 py-1.5 rounded-full text-xs uppercase font-bold text-[#59413b] hover:text-[#231916] hover:bg-[#fff1ec] transition-colors cursor-pointer"
-          >
-            How It Works
-          </button>
-          <NavLink to="/group-ordering" className={navLinkClass}>
-            Group Order
-          </NavLink>
           <button
             type="button"
             onClick={() => scrollToSection('contact')}
@@ -154,19 +153,10 @@ export default function Navbar() {
                     ? '/delivery/dashboard'
                     : '/diner-dashboard'
                 }
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-[#f7e4de] border-2 border-[#231916] rounded-xl text-xs font-black uppercase shadow-[2px_2px_0px_#231916] hover:bg-[#ffece6] transition-all"
-                title="Go to Portal Dashboard"
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-[#f7e4de] border-2 border-[#231916] rounded-xl text-xs font-bold uppercase shadow-[2px_2px_0px_#231916] hover:bg-[#ffece6]"
               >
                 <span className="material-symbols-outlined text-sm text-[#cb4926]">account_circle</span>
-                <span className="max-w-[130px] truncate">
-                  {currentUser.role === 'CUSTOMER' || !currentUser.role
-                    ? 'Customer Portal'
-                    : currentUser.role === 'RESTAURANT'
-                    ? 'Restaurant Portal'
-                    : currentUser.role === 'DELIVERY_PARTNER'
-                    ? 'Delivery Portal'
-                    : 'Admin Portal'}
-                </span>
+                <span className="max-w-[100px] truncate">{currentUser.name || 'Account'}</span>
               </Link>
 
               <button

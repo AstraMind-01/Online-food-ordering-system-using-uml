@@ -28,9 +28,9 @@ export default function Login() {
       } else if (role === 'ADMIN') {
         navigate('/admin/dashboard', { replace: true });
       } else if (role === 'CUSTOMER') {
-        navigate('/diner-dashboard', { replace: true });
+        navigate(from && from !== '/restaurant/dashboard' && from !== '/login' ? from : '/diner-dashboard', { replace: true });
       } else {
-        navigate(from === '/restaurant/dashboard' ? '/diner-dashboard' : from, { replace: true });
+        navigate(from === '/restaurant/dashboard' ? '/' : from, { replace: true });
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Invalid email or password. Please check your credentials.');
@@ -57,7 +57,7 @@ export default function Login() {
       } else if (role === 'CUSTOMER') {
         navigate('/diner-dashboard', { replace: true });
       } else {
-        navigate('/diner-dashboard', { replace: true });
+        navigate('/', { replace: true });
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
